@@ -1,0 +1,16 @@
+{
+  "source": "https://huggingface.co/datasets/McAuley-Lab/Amazon-Reviews-2023",
+  "project_page": "https://amazon-reviews-2023.github.io/",
+  "revision": "2b6d039ed471f2ba5fd2acb718bf33b0a7e5598e",
+  "download_url": "https://huggingface.co/datasets/McAuley-Lab/Amazon-Reviews-2023/resolve/2b6d039ed471f2ba5fd2acb718bf33b0a7e5598e/raw/review_categories/All_Beauty.jsonl",
+  "retrieved_utc": "2026-10-19T21:33:57.804658+00:00",
+  "sampling": "First 50,000 source records; keep eight most frequent parent_asin products. Not a random or representative sample.",
+  "source_rows_scanned": 50000,
+  "retained_rows": 932,
+  "excluded_on_import": 0,
+  "dataset_id": "0c712a274ac86a968892ebc4c57a2b5725a00882c9a4dc8eed7ef9678b432ca7",
+  "csv_sha256": "4ce44ea1937ef09c5d4d163e398dba8a84e9d72b1207bf4a9054b59ff883a770",
+  "product_identity": "Original parent_asin; product names are not inferred.",
+  "dates": "Original timestamps converted from Unix milliseconds to UTC dates.",
+  "limits": "Incomplete historical sample. Metrics describe this saved sample only, not all Amazon customers or a brand. No human-verified topic labels."
+}

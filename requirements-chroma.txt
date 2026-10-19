@@ -1,0 +1,4 @@
+-r requirements-embeddings.txt
+# Learning baseline compatible with Python 3.9.
+chromadb==0.6.3
+posthog>=2.4,<4

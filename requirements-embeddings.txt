@@ -1,0 +1,4 @@
+# Versions compatible with this project's Python 3.9 environment.
+sentence-transformers==3.4.1
+transformers==4.48.3
+torch==2.6.0

@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+.env
+.streamlit/secrets.toml
+data/*.sqlite*
+
+.model_cache/
+
+data/chroma_lesson/
+
+data/chroma_reviews/
+
+data/amazon_beauty_sample.csv
