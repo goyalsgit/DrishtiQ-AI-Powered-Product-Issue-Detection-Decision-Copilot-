@@ -3,8 +3,18 @@
 A local application for importing customer reviews, calculating SQL metrics,
 retrieving review evidence by meaning, and recording human decisions.
 
-The application now connects persistent SQLite storage and local MiniLM/Chroma
-retrieval. Gemini generation and LangGraph orchestration are not implemented yet.
+The dashboard connects persistent SQLite storage and local MiniLM/Chroma
+retrieval. A separate learning CLI now implements Gemini chat, fixed RAG,
+and a bounded LangGraph tool loop. The dashboard does not yet use these modules.
+
+See [Lesson 10: chat, RAG, and agents](docs/learning/10-agent-lab.md) for commands
+and a step-by-step explanation. The offline mode executes real retrieval using
+explicitly scripted model messages; it does not generate a Gemini answer.
+The user has verified the live metrics agent locally.
+[Lesson 11](docs/learning/11-period-comparison.md) adds SQL-backed period
+comparison and scoped evidence search for both months; that extension has
+offline tests and a scripted integration run, with live behavior still to check.
+See the [remaining implementation sequence](docs/learning/project-next-steps.md).
 
 ## Start
 
@@ -145,8 +155,10 @@ Streamlit AppTest.
 - Added passage indexing, product/date filters, source-linked evidence, and validated
   recommendations with persistent human decision history.
 
-Do not claim production readiness, measured model accuracy, business impact,
-Gemini/RAG answer generation, or LangGraph integration yet.
+Do not claim production readiness, measured model accuracy, or business impact.
+The user's live metrics smoke check does not establish general answer quality.
+LangGraph integration currently exists in the learning CLI, with offline
+routing tests, not in the dashboard approval flow.
 
 ## Retrieval evaluation — first measured baseline
 

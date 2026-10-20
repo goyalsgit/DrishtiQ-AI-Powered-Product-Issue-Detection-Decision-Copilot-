@@ -1,0 +1,5 @@
+# Separate Python 3.12 environment; does not replace the dashboard environment.
+langchain>=1,<2
+langgraph>=1,<2
+pandas>=2,<2.4
+langchain-google-genai>=4,<5

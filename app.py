@@ -9,8 +9,8 @@ from pathlib import Path
 st.set_page_config(page_title='DristiQ | Customer Intelligence', page_icon='◈', layout='wide')
 st.markdown('''<style>.stApp{background:#0b1120;color:#e5edf9}h1{letter-spacing:-2px}div[data-testid="stMetric"]{background:#152238;padding:20px;border-radius:14px;border:1px solid #263850}</style>''', unsafe_allow_html=True)
 st.caption('DRISTIQ / CUSTOMER FEEDBACK INTELLIGENCE')
-st.title('Listen closely. Decide clearly.')
-st.write('Explore review trends, inspect complaint evidence, and record a human decision.')
+st.title('Understand what your customers are saying.')
+st.write('Ask a question, inspect the evidence, and decide what to investigate next.')
 store = ReviewStore()
 # Seed the labelled demo only if there are no saved datasets yet.
 if store.datasets().empty:
@@ -58,7 +58,7 @@ with st.sidebar:
     months = sorted(selected['month'].unique())
     current = st.selectbox('Analysis month', months, index=len(months)-1)
     earlier = [m for m in months if m < current]
-    baseline = st.selectbox('Compare with', earlier) if earlier else None
+    baseline = st.selectbox('Compare with', earlier, index=len(earlier)-1) if earlier else None
     minimum = st.number_input('Minimum reviews per period', 5, 500, 20)
     threshold = st.slider('Alert threshold (percentage points)', 1, 50, 10)
     st.caption('Low rating = 1 or 2 stars. Topic tags use keywords, not AI sentiment analysis.')
@@ -72,7 +72,11 @@ cols[0].metric('Reviews analysed', n)
 cols[1].metric('Average rating', f'{avg:.2f} / 5')
 cols[2].metric('Low-rating share', f'{share:.1f}%', f'{delta:+.1f} pp' if delta is not None else None, delta_color='inverse')
 cols[3].metric('Low-rating reviews', neg)
-overview, evidence, approval, learn = st.tabs(['Overview', 'Review evidence', 'Decisions', 'Explain the project'])
+investigation, overview, evidence, approval, learn = st.tabs(
+    ['AI Investigation', 'Overview', 'Review evidence', 'Decisions', 'How it works'])
+with investigation:
+    from src.dashboard_ai import render_investigation
+    render_investigation(store, dataset_id, product, current, baseline, int(minimum))
 with overview:
     st.subheader(f'{product} · {current}')
     if delta is None:
@@ -173,4 +177,10 @@ with learn:
 
 **5. SQLite saves human decisions.** The decision includes dataset identity and supporting review IDs, so it survives an app restart.
 
-**Next GenAI stage:** send retrieved evidence and SQL metrics to a model, validate its citations, then coordinate the workflow using LangGraph. Gemini and LangGraph are not implemented yet.''')
+**6. AI Investigation connects Gemini to the tools.** Enter a key and ask a question.
+LangGraph runs the model/tool loop, SQL supplies metrics, and MiniLM + Chroma find
+review evidence. The report, evidence, and tool activity appear together.
+
+**What is still pending:** structured AI report validation, stronger evidence
+relevance checks, and persistent approval of AI investigations. The Decisions tab
+currently records rule-based proposals; it does not approve an AI report.''')

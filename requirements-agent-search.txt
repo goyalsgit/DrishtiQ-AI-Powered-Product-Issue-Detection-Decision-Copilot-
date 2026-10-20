@@ -1,0 +1,3 @@
+-r requirements-agent.txt
+-r requirements-chroma.txt
+-r requirements-embeddings.txt

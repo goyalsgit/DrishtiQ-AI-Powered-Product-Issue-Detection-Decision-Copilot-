@@ -1,0 +1,3 @@
+# Python 3.12: dashboard + Gemini + LangGraph + local retrieval in one environment.
+-r requirements-agent-search.txt
+streamlit>=1.49,<1.51
