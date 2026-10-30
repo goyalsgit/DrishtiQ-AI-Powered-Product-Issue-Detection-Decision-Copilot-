@@ -146,7 +146,7 @@ def render_company_sync(search):
                 _, result = company_db.sync(store, search)
             st.success(f"Fetched {result['fetched']:,} new rows, added {result['added']:,} reviews, "
                        f"indexed {result['passages_indexed']:,} passages. Choose "
-                       f"\"{company_db.LIVE_NAME}\" in the sidebar (refresh if it is new).")
+                       f"\"{company_db.live_name()}\" in the sidebar (refresh if it is new).")
         with st.form('add_company_review'):
             st.markdown('Simulate a customer posting a review in the company system:')
             sku = st.selectbox('Company product', company_db.products())

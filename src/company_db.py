@@ -96,8 +96,14 @@ def add_review(sku, stars, body, created_at=None):
                            'VALUES (?,?,?,?)', values).lastrowid
 
 
+def live_name():
+    """Each source gets its own DrishtiQ dataset, so row IDs from the local demo
+    file and from Neon can never clash (both start counting at 1)."""
+    return 'Company reviews (Neon)' if database_url() else LIVE_NAME
+
+
 def sync(store, search):
-    dataset_id = store.create_live_dataset(LIVE_NAME)
+    dataset_id = store.create_live_dataset(live_name())
     if database_url():
         return dataset_id, sync_postgres_source(database_url(), MAPPING, store, search, dataset_id)
     return dataset_id, sync_sqlite_source(COMPANY_DB, MAPPING, store, search, dataset_id)
