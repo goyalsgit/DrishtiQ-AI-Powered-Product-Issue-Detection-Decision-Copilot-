@@ -1,0 +1,1836 @@
+{
+  "created_utc": "2026-10-20T20:09:38.318719+00:00",
+  "k": 6,
+  "dataset_id": "0c712a274ac86a968892ebc4c57a2b5725a00882c9a4dc8eed7ef9678b432ca7",
+  "cases_sha256": "a0eb4946fa98379735b6503bd055ec93dca72491b706c2511fb03f4de77221a9",
+  "label_status": "assistant_reviewed_pending_human_review",
+  "case_count": 24,
+  "model": "sentence-transformers/all-MiniLM-L6-v2",
+  "index_version": "minilm-cosine-200tokens-overlap40-v1",
+  "packages": {
+    "sentence-transformers": "3.4.1",
+    "chromadb": "0.6.3",
+    "transformers": "4.48.3",
+    "torch": "2.6.0"
+  },
+  "limitations": [
+    "Assistant-reviewed labels, pending independent human review; 24 development cases in four small scopes.",
+    "No held-out evaluation or full RAG answer generation. These are retrieval diagnostics, not an accuracy claim.",
+    "Precision@k divides by k, even if fewer results are returned; answerable cases only.",
+    "No-evidence cases are excluded from precision/recall and reported separately.",
+    "Unsupported return means results for a scope with no labelled evidence; it is not a generated hallucination.",
+    "No abstention threshold is implemented. Single-user warm-query timings exclude model load and indexing."
+  ],
+  "summary": {
+    "semantic": {
+      "answerable_cases": 20,
+      "no_evidence_cases": 4,
+      "macro_precision_at_k": 0.24166666666666664,
+      "macro_recall_at_k": 0.9583333333333334,
+      "mean_reciprocal_rank_at_k": 0.8041666666666666,
+      "hit_rate_at_k": 1.0,
+      "unsupported_return_rate": 1.0,
+      "scope_violations": 0,
+      "duplicate_results": 0
+    },
+    "keyword": {
+      "answerable_cases": 20,
+      "no_evidence_cases": 4,
+      "macro_precision_at_k": 0.21666666666666665,
+      "macro_recall_at_k": 0.8416666666666666,
+      "mean_reciprocal_rank_at_k": 0.8166666666666667,
+      "hit_rate_at_k": 0.9,
+      "unsupported_return_rate": 1.0,
+      "scope_violations": 0,
+      "duplicate_results": 0
+    }
+  },
+  "results": {
+    "semantic": [
+      {
+        "case_id": "Q01",
+        "question": "Which reviews say the color differs from the product picture?",
+        "product": "B0107QYW14",
+        "month": "2016-04",
+        "relevant_ids": [
+          "AMZ-2fa2b421b1cdd827a06a9741d8c57f2df7e072cfb6640cb8007c32a82ec81a11",
+          "AMZ-ce88ec5676de8c5739981d620f166435d37e8ae0fad8a6087b729dbe52f5c738",
+          "AMZ-a003e6ea21defd6ffc72baa66e5968ba2a61667f6c01f5a7821af37d1057799e"
+        ],
+        "returned_ids": [
+          "AMZ-35441e096e254b9c30e87a9d4c9437c04c93c6faeb8394627ec91634a965a5b6",
+          "AMZ-ce88ec5676de8c5739981d620f166435d37e8ae0fad8a6087b729dbe52f5c738",
+          "AMZ-2fa2b421b1cdd827a06a9741d8c57f2df7e072cfb6640cb8007c32a82ec81a11",
+          "AMZ-38cdde76f425b11cd22764157c42721d317cfa5d79a208f30d6939771260a5e6",
+          "AMZ-dcfef87956e174024b1d7dcc501633cde051e23220d6a153bb54e65f1f5bc723",
+          "AMZ-b7b338502400e2642e5a597238a3d74d13758e6551962ee684c12fa09a1391b9"
+        ],
+        "similarities": [
+          0.445,
+          0.435,
+          0.3631,
+          0.3591,
+          0.2866,
+          0.2812
+        ],
+        "latency_ms": 8.81,
+        "metrics": {
+          "precision_at_k": 0.3333333333333333,
+          "recall_at_k": 0.6666666666666666,
+          "reciprocal_rank_at_k": 0.5,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [
+            "AMZ-a003e6ea21defd6ffc72baa66e5968ba2a61667f6c01f5a7821af37d1057799e"
+          ],
+          "irrelevant_returned_ids": [
+            "AMZ-35441e096e254b9c30e87a9d4c9437c04c93c6faeb8394627ec91634a965a5b6",
+            "AMZ-38cdde76f425b11cd22764157c42721d317cfa5d79a208f30d6939771260a5e6",
+            "AMZ-dcfef87956e174024b1d7dcc501633cde051e23220d6a153bb54e65f1f5bc723",
+            "AMZ-b7b338502400e2642e5a597238a3d74d13758e6551962ee684c12fa09a1391b9"
+          ]
+        }
+      },
+      {
+        "case_id": "Q02",
+        "question": "Which review reports a weak fastening clasp?",
+        "product": "B0107QYW14",
+        "month": "2016-04",
+        "relevant_ids": [
+          "AMZ-a003e6ea21defd6ffc72baa66e5968ba2a61667f6c01f5a7821af37d1057799e"
+        ],
+        "returned_ids": [
+          "AMZ-a003e6ea21defd6ffc72baa66e5968ba2a61667f6c01f5a7821af37d1057799e",
+          "AMZ-64446056e10e70892a6ff0cf2f8f21d0729f5e54e4470b1561a835dc8cb23605",
+          "AMZ-778ee96695eccb0afa524b0dddb1615dd4a4acf2476cd13d8a285f93b7d8d04d",
+          "AMZ-6bcc3fb11ae5cb039c5d3cf127c83cb753697baac4010287af003d20d27c58ad",
+          "AMZ-b7b338502400e2642e5a597238a3d74d13758e6551962ee684c12fa09a1391b9",
+          "AMZ-2fa2b421b1cdd827a06a9741d8c57f2df7e072cfb6640cb8007c32a82ec81a11"
+        ],
+        "similarities": [
+          0.5716,
+          0.2933,
+          0.2657,
+          0.2481,
+          0.1962,
+          0.1669
+        ],
+        "latency_ms": 9.14,
+        "metrics": {
+          "precision_at_k": 0.16666666666666666,
+          "recall_at_k": 1.0,
+          "reciprocal_rank_at_k": 1.0,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-64446056e10e70892a6ff0cf2f8f21d0729f5e54e4470b1561a835dc8cb23605",
+            "AMZ-778ee96695eccb0afa524b0dddb1615dd4a4acf2476cd13d8a285f93b7d8d04d",
+            "AMZ-6bcc3fb11ae5cb039c5d3cf127c83cb753697baac4010287af003d20d27c58ad",
+            "AMZ-b7b338502400e2642e5a597238a3d74d13758e6551962ee684c12fa09a1391b9",
+            "AMZ-2fa2b421b1cdd827a06a9741d8c57f2df7e072cfb6640cb8007c32a82ec81a11"
+          ]
+        }
+      },
+      {
+        "case_id": "Q03",
+        "question": "Find a review reporting a crooked glued stone.",
+        "product": "B0107QYW14",
+        "month": "2016-04",
+        "relevant_ids": [
+          "AMZ-64446056e10e70892a6ff0cf2f8f21d0729f5e54e4470b1561a835dc8cb23605"
+        ],
+        "returned_ids": [
+          "AMZ-ce88ec5676de8c5739981d620f166435d37e8ae0fad8a6087b729dbe52f5c738",
+          "AMZ-64446056e10e70892a6ff0cf2f8f21d0729f5e54e4470b1561a835dc8cb23605",
+          "AMZ-6bcc3fb11ae5cb039c5d3cf127c83cb753697baac4010287af003d20d27c58ad",
+          "AMZ-778ee96695eccb0afa524b0dddb1615dd4a4acf2476cd13d8a285f93b7d8d04d",
+          "AMZ-b7b338502400e2642e5a597238a3d74d13758e6551962ee684c12fa09a1391b9",
+          "AMZ-35441e096e254b9c30e87a9d4c9437c04c93c6faeb8394627ec91634a965a5b6"
+        ],
+        "similarities": [
+          0.4123,
+          0.3986,
+          0.2092,
+          0.2077,
+          0.1444,
+          0.1369
+        ],
+        "latency_ms": 8.79,
+        "metrics": {
+          "precision_at_k": 0.16666666666666666,
+          "recall_at_k": 1.0,
+          "reciprocal_rank_at_k": 0.5,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-ce88ec5676de8c5739981d620f166435d37e8ae0fad8a6087b729dbe52f5c738",
+            "AMZ-6bcc3fb11ae5cb039c5d3cf127c83cb753697baac4010287af003d20d27c58ad",
+            "AMZ-778ee96695eccb0afa524b0dddb1615dd4a4acf2476cd13d8a285f93b7d8d04d",
+            "AMZ-b7b338502400e2642e5a597238a3d74d13758e6551962ee684c12fa09a1391b9",
+            "AMZ-35441e096e254b9c30e87a9d4c9437c04c93c6faeb8394627ec91634a965a5b6"
+          ]
+        }
+      },
+      {
+        "case_id": "Q04",
+        "question": "Which reviewer received the order ahead of schedule?",
+        "product": "B0107QYW14",
+        "month": "2016-04",
+        "relevant_ids": [
+          "AMZ-35441e096e254b9c30e87a9d4c9437c04c93c6faeb8394627ec91634a965a5b6"
+        ],
+        "returned_ids": [
+          "AMZ-35441e096e254b9c30e87a9d4c9437c04c93c6faeb8394627ec91634a965a5b6",
+          "AMZ-1d2b5e4bde1e39fdbba5248ed00a88f1fa862335711db65a4a6c39990d3a42c8",
+          "AMZ-778ee96695eccb0afa524b0dddb1615dd4a4acf2476cd13d8a285f93b7d8d04d",
+          "AMZ-dcfef87956e174024b1d7dcc501633cde051e23220d6a153bb54e65f1f5bc723",
+          "AMZ-ce88ec5676de8c5739981d620f166435d37e8ae0fad8a6087b729dbe52f5c738",
+          "AMZ-6bcc3fb11ae5cb039c5d3cf127c83cb753697baac4010287af003d20d27c58ad"
+        ],
+        "similarities": [
+          0.2818,
+          0.1396,
+          0.1284,
+          0.0882,
+          0.0619,
+          0.0434
+        ],
+        "latency_ms": 8.58,
+        "metrics": {
+          "precision_at_k": 0.16666666666666666,
+          "recall_at_k": 1.0,
+          "reciprocal_rank_at_k": 1.0,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-1d2b5e4bde1e39fdbba5248ed00a88f1fa862335711db65a4a6c39990d3a42c8",
+            "AMZ-778ee96695eccb0afa524b0dddb1615dd4a4acf2476cd13d8a285f93b7d8d04d",
+            "AMZ-dcfef87956e174024b1d7dcc501633cde051e23220d6a153bb54e65f1f5bc723",
+            "AMZ-ce88ec5676de8c5739981d620f166435d37e8ae0fad8a6087b729dbe52f5c738",
+            "AMZ-6bcc3fb11ae5cb039c5d3cf127c83cb753697baac4010287af003d20d27c58ad"
+          ]
+        }
+      },
+      {
+        "case_id": "Q05",
+        "question": "Which reviews praise the low price or value for money?",
+        "product": "B0107QYW14",
+        "month": "2016-04",
+        "relevant_ids": [
+          "AMZ-778ee96695eccb0afa524b0dddb1615dd4a4acf2476cd13d8a285f93b7d8d04d",
+          "AMZ-35441e096e254b9c30e87a9d4c9437c04c93c6faeb8394627ec91634a965a5b6",
+          "AMZ-ce88ec5676de8c5739981d620f166435d37e8ae0fad8a6087b729dbe52f5c738"
+        ],
+        "returned_ids": [
+          "AMZ-38cdde76f425b11cd22764157c42721d317cfa5d79a208f30d6939771260a5e6",
+          "AMZ-35441e096e254b9c30e87a9d4c9437c04c93c6faeb8394627ec91634a965a5b6",
+          "AMZ-ce88ec5676de8c5739981d620f166435d37e8ae0fad8a6087b729dbe52f5c738",
+          "AMZ-64446056e10e70892a6ff0cf2f8f21d0729f5e54e4470b1561a835dc8cb23605",
+          "AMZ-778ee96695eccb0afa524b0dddb1615dd4a4acf2476cd13d8a285f93b7d8d04d",
+          "AMZ-dcfef87956e174024b1d7dcc501633cde051e23220d6a153bb54e65f1f5bc723"
+        ],
+        "similarities": [
+          0.4286,
+          0.3544,
+          0.3171,
+          0.2427,
+          0.2221,
+          0.2014
+        ],
+        "latency_ms": 8.35,
+        "metrics": {
+          "precision_at_k": 0.5,
+          "recall_at_k": 1.0,
+          "reciprocal_rank_at_k": 0.5,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-38cdde76f425b11cd22764157c42721d317cfa5d79a208f30d6939771260a5e6",
+            "AMZ-64446056e10e70892a6ff0cf2f8f21d0729f5e54e4470b1561a835dc8cb23605",
+            "AMZ-dcfef87956e174024b1d7dcc501633cde051e23220d6a153bb54e65f1f5bc723"
+          ]
+        }
+      },
+      {
+        "case_id": "Q06",
+        "question": "Which reviews mention that the pendant is too large?",
+        "product": "B0107QYW14",
+        "month": "2016-04",
+        "relevant_ids": [
+          "AMZ-a003e6ea21defd6ffc72baa66e5968ba2a61667f6c01f5a7821af37d1057799e"
+        ],
+        "returned_ids": [
+          "AMZ-64446056e10e70892a6ff0cf2f8f21d0729f5e54e4470b1561a835dc8cb23605",
+          "AMZ-6bcc3fb11ae5cb039c5d3cf127c83cb753697baac4010287af003d20d27c58ad",
+          "AMZ-a003e6ea21defd6ffc72baa66e5968ba2a61667f6c01f5a7821af37d1057799e",
+          "AMZ-778ee96695eccb0afa524b0dddb1615dd4a4acf2476cd13d8a285f93b7d8d04d",
+          "AMZ-2fa2b421b1cdd827a06a9741d8c57f2df7e072cfb6640cb8007c32a82ec81a11",
+          "AMZ-ce88ec5676de8c5739981d620f166435d37e8ae0fad8a6087b729dbe52f5c738"
+        ],
+        "similarities": [
+          0.6443,
+          0.6212,
+          0.5293,
+          0.4265,
+          0.3603,
+          0.2368
+        ],
+        "latency_ms": 8.97,
+        "metrics": {
+          "precision_at_k": 0.16666666666666666,
+          "recall_at_k": 1.0,
+          "reciprocal_rank_at_k": 0.3333333333333333,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-64446056e10e70892a6ff0cf2f8f21d0729f5e54e4470b1561a835dc8cb23605",
+            "AMZ-6bcc3fb11ae5cb039c5d3cf127c83cb753697baac4010287af003d20d27c58ad",
+            "AMZ-778ee96695eccb0afa524b0dddb1615dd4a4acf2476cd13d8a285f93b7d8d04d",
+            "AMZ-2fa2b421b1cdd827a06a9741d8c57f2df7e072cfb6640cb8007c32a82ec81a11",
+            "AMZ-ce88ec5676de8c5739981d620f166435d37e8ae0fad8a6087b729dbe52f5c738"
+          ]
+        }
+      },
+      {
+        "case_id": "Q07",
+        "question": "Which review says the necklace is light and comfortable rather than heavy?",
+        "product": "B0107QYW14",
+        "month": "2016-05",
+        "relevant_ids": [
+          "AMZ-06dd1695dfb061f9bbcd7619c0c59cf5225f56e8fbdcaa53dfd1d5d530174924"
+        ],
+        "returned_ids": [
+          "AMZ-06dd1695dfb061f9bbcd7619c0c59cf5225f56e8fbdcaa53dfd1d5d530174924",
+          "AMZ-b4bc8f4946e904c5960c91dbebb02586769800aab445cfd78d40d231052f9fae",
+          "AMZ-1b44cbba0db7fc9978a2f1b5d88aca718c2c4cab586d3ada968e7612d4181729",
+          "AMZ-fdb7580af2fc80b75093c6c37d6f9ca7c7fcdd491b2141ebadb742728dae7f01",
+          "AMZ-72fb860f5c74ef649629a5f0a396a48502f5e2ef15d5d40cb767269d513ca26f",
+          "AMZ-62da069328d858d3eb823120ea30bfcae207ac4a50b3f607b444687838bb5f20"
+        ],
+        "similarities": [
+          0.6449,
+          0.4736,
+          0.4505,
+          0.43,
+          0.3481,
+          0.2861
+        ],
+        "latency_ms": 8.6,
+        "metrics": {
+          "precision_at_k": 0.16666666666666666,
+          "recall_at_k": 1.0,
+          "reciprocal_rank_at_k": 1.0,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-b4bc8f4946e904c5960c91dbebb02586769800aab445cfd78d40d231052f9fae",
+            "AMZ-1b44cbba0db7fc9978a2f1b5d88aca718c2c4cab586d3ada968e7612d4181729",
+            "AMZ-fdb7580af2fc80b75093c6c37d6f9ca7c7fcdd491b2141ebadb742728dae7f01",
+            "AMZ-72fb860f5c74ef649629a5f0a396a48502f5e2ef15d5d40cb767269d513ca26f",
+            "AMZ-62da069328d858d3eb823120ea30bfcae207ac4a50b3f607b444687838bb5f20"
+          ]
+        }
+      },
+      {
+        "case_id": "Q08",
+        "question": "Which review suggests the necklace would make a gift?",
+        "product": "B0107QYW14",
+        "month": "2016-05",
+        "relevant_ids": [
+          "AMZ-b4bc8f4946e904c5960c91dbebb02586769800aab445cfd78d40d231052f9fae"
+        ],
+        "returned_ids": [
+          "AMZ-1b44cbba0db7fc9978a2f1b5d88aca718c2c4cab586d3ada968e7612d4181729",
+          "AMZ-b4bc8f4946e904c5960c91dbebb02586769800aab445cfd78d40d231052f9fae",
+          "AMZ-06dd1695dfb061f9bbcd7619c0c59cf5225f56e8fbdcaa53dfd1d5d530174924",
+          "AMZ-fdb7580af2fc80b75093c6c37d6f9ca7c7fcdd491b2141ebadb742728dae7f01",
+          "AMZ-72fb860f5c74ef649629a5f0a396a48502f5e2ef15d5d40cb767269d513ca26f",
+          "AMZ-118fb0e2e166ba1dc6b4ec3e84a33d6f93b4693471c860c74d3b028635e0a6a1"
+        ],
+        "similarities": [
+          0.5819,
+          0.5457,
+          0.5155,
+          0.4856,
+          0.3096,
+          0.2572
+        ],
+        "latency_ms": 8.06,
+        "metrics": {
+          "precision_at_k": 0.16666666666666666,
+          "recall_at_k": 1.0,
+          "reciprocal_rank_at_k": 0.5,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-1b44cbba0db7fc9978a2f1b5d88aca718c2c4cab586d3ada968e7612d4181729",
+            "AMZ-06dd1695dfb061f9bbcd7619c0c59cf5225f56e8fbdcaa53dfd1d5d530174924",
+            "AMZ-fdb7580af2fc80b75093c6c37d6f9ca7c7fcdd491b2141ebadb742728dae7f01",
+            "AMZ-72fb860f5c74ef649629a5f0a396a48502f5e2ef15d5d40cb767269d513ca26f",
+            "AMZ-118fb0e2e166ba1dc6b4ec3e84a33d6f93b4693471c860c74d3b028635e0a6a1"
+          ]
+        }
+      },
+      {
+        "case_id": "Q09",
+        "question": "Which review raises concerns about manufacturing labor conditions?",
+        "product": "B0107QYW14",
+        "month": "2016-05",
+        "relevant_ids": [
+          "AMZ-fdb7580af2fc80b75093c6c37d6f9ca7c7fcdd491b2141ebadb742728dae7f01"
+        ],
+        "returned_ids": [
+          "AMZ-62da069328d858d3eb823120ea30bfcae207ac4a50b3f607b444687838bb5f20",
+          "AMZ-98984ce510f6564345b822e41d1452522471ae469ca363bf450061880aadf0d5",
+          "AMZ-251c2f5dcb8bebb95b532c9678926f731e4e9d4010797afeffc2c06f71e7e3a8",
+          "AMZ-fdb7580af2fc80b75093c6c37d6f9ca7c7fcdd491b2141ebadb742728dae7f01",
+          "AMZ-72fb860f5c74ef649629a5f0a396a48502f5e2ef15d5d40cb767269d513ca26f",
+          "AMZ-118fb0e2e166ba1dc6b4ec3e84a33d6f93b4693471c860c74d3b028635e0a6a1"
+        ],
+        "similarities": [
+          0.1414,
+          0.106,
+          0.0897,
+          0.0789,
+          0.0344,
+          0.0289
+        ],
+        "latency_ms": 8.35,
+        "metrics": {
+          "precision_at_k": 0.16666666666666666,
+          "recall_at_k": 1.0,
+          "reciprocal_rank_at_k": 0.25,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-62da069328d858d3eb823120ea30bfcae207ac4a50b3f607b444687838bb5f20",
+            "AMZ-98984ce510f6564345b822e41d1452522471ae469ca363bf450061880aadf0d5",
+            "AMZ-251c2f5dcb8bebb95b532c9678926f731e4e9d4010797afeffc2c06f71e7e3a8",
+            "AMZ-72fb860f5c74ef649629a5f0a396a48502f5e2ef15d5d40cb767269d513ca26f",
+            "AMZ-118fb0e2e166ba1dc6b4ec3e84a33d6f93b4693471c860c74d3b028635e0a6a1"
+          ]
+        }
+      },
+      {
+        "case_id": "Q10",
+        "question": "Which reviews complain that the item looks cheap?",
+        "product": "B0107QYW14",
+        "month": "2016-05",
+        "relevant_ids": [
+          "AMZ-62da069328d858d3eb823120ea30bfcae207ac4a50b3f607b444687838bb5f20",
+          "AMZ-118fb0e2e166ba1dc6b4ec3e84a33d6f93b4693471c860c74d3b028635e0a6a1"
+        ],
+        "returned_ids": [
+          "AMZ-62da069328d858d3eb823120ea30bfcae207ac4a50b3f607b444687838bb5f20",
+          "AMZ-98984ce510f6564345b822e41d1452522471ae469ca363bf450061880aadf0d5",
+          "AMZ-118fb0e2e166ba1dc6b4ec3e84a33d6f93b4693471c860c74d3b028635e0a6a1",
+          "AMZ-b4bc8f4946e904c5960c91dbebb02586769800aab445cfd78d40d231052f9fae",
+          "AMZ-06dd1695dfb061f9bbcd7619c0c59cf5225f56e8fbdcaa53dfd1d5d530174924",
+          "AMZ-fdb7580af2fc80b75093c6c37d6f9ca7c7fcdd491b2141ebadb742728dae7f01"
+        ],
+        "similarities": [
+          0.6653,
+          0.5172,
+          0.478,
+          0.3435,
+          0.3084,
+          0.2566
+        ],
+        "latency_ms": 8.55,
+        "metrics": {
+          "precision_at_k": 0.3333333333333333,
+          "recall_at_k": 1.0,
+          "reciprocal_rank_at_k": 1.0,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-98984ce510f6564345b822e41d1452522471ae469ca363bf450061880aadf0d5",
+            "AMZ-b4bc8f4946e904c5960c91dbebb02586769800aab445cfd78d40d231052f9fae",
+            "AMZ-06dd1695dfb061f9bbcd7619c0c59cf5225f56e8fbdcaa53dfd1d5d530174924",
+            "AMZ-fdb7580af2fc80b75093c6c37d6f9ca7c7fcdd491b2141ebadb742728dae7f01"
+          ]
+        }
+      },
+      {
+        "case_id": "Q11",
+        "question": "Which review mentions liking the rope chain?",
+        "product": "B0107QYW14",
+        "month": "2016-05",
+        "relevant_ids": [
+          "AMZ-72fb860f5c74ef649629a5f0a396a48502f5e2ef15d5d40cb767269d513ca26f"
+        ],
+        "returned_ids": [
+          "AMZ-72fb860f5c74ef649629a5f0a396a48502f5e2ef15d5d40cb767269d513ca26f",
+          "AMZ-fdb7580af2fc80b75093c6c37d6f9ca7c7fcdd491b2141ebadb742728dae7f01",
+          "AMZ-98984ce510f6564345b822e41d1452522471ae469ca363bf450061880aadf0d5",
+          "AMZ-06dd1695dfb061f9bbcd7619c0c59cf5225f56e8fbdcaa53dfd1d5d530174924",
+          "AMZ-118fb0e2e166ba1dc6b4ec3e84a33d6f93b4693471c860c74d3b028635e0a6a1",
+          "AMZ-b4bc8f4946e904c5960c91dbebb02586769800aab445cfd78d40d231052f9fae"
+        ],
+        "similarities": [
+          0.4301,
+          0.2234,
+          0.2105,
+          0.1841,
+          0.1797,
+          0.1762
+        ],
+        "latency_ms": 8.5,
+        "metrics": {
+          "precision_at_k": 0.16666666666666666,
+          "recall_at_k": 1.0,
+          "reciprocal_rank_at_k": 1.0,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-fdb7580af2fc80b75093c6c37d6f9ca7c7fcdd491b2141ebadb742728dae7f01",
+            "AMZ-98984ce510f6564345b822e41d1452522471ae469ca363bf450061880aadf0d5",
+            "AMZ-06dd1695dfb061f9bbcd7619c0c59cf5225f56e8fbdcaa53dfd1d5d530174924",
+            "AMZ-118fb0e2e166ba1dc6b4ec3e84a33d6f93b4693471c860c74d3b028635e0a6a1",
+            "AMZ-b4bc8f4946e904c5960c91dbebb02586769800aab445cfd78d40d231052f9fae"
+          ]
+        }
+      },
+      {
+        "case_id": "Q12",
+        "question": "Which reviews say this makes hair flatter, straighter, or less curly?",
+        "product": "B00YQ6X8EO",
+        "month": "2021-06",
+        "relevant_ids": [
+          "AMZ-a912ce622e6c58bc078813f255a98f5480580c395fb24362140e3d9d7756e4e9",
+          "AMZ-c30069a9a074c28feef349afe3e614afa8fc60a5f6b7f7d335bd7ce22750803a"
+        ],
+        "returned_ids": [
+          "AMZ-66eae4dc0bd1e8de5d874a6b705826cc56cfa2cbf8ad5622ee4e36cb46d0d373",
+          "AMZ-a912ce622e6c58bc078813f255a98f5480580c395fb24362140e3d9d7756e4e9",
+          "AMZ-c30069a9a074c28feef349afe3e614afa8fc60a5f6b7f7d335bd7ce22750803a",
+          "AMZ-f628e422528002bed12112d4e2d53ebbb3a7f07c43e1f8ce91008bb1439baa91",
+          "AMZ-a4513f218e38cd9bbbc0e3b734ab4b0c0ed727580efae8f2a5f3f676349617f8",
+          "AMZ-29f36396a30ab0db65aa8259e592fc0cc3d1f8ad6764debf6ccf99925fde56a1"
+        ],
+        "similarities": [
+          0.5371,
+          0.4743,
+          0.4311,
+          0.4254,
+          0.3921,
+          0.2834
+        ],
+        "latency_ms": 9.38,
+        "metrics": {
+          "precision_at_k": 0.3333333333333333,
+          "recall_at_k": 1.0,
+          "reciprocal_rank_at_k": 0.5,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-66eae4dc0bd1e8de5d874a6b705826cc56cfa2cbf8ad5622ee4e36cb46d0d373",
+            "AMZ-f628e422528002bed12112d4e2d53ebbb3a7f07c43e1f8ce91008bb1439baa91",
+            "AMZ-a4513f218e38cd9bbbc0e3b734ab4b0c0ed727580efae8f2a5f3f676349617f8",
+            "AMZ-29f36396a30ab0db65aa8259e592fc0cc3d1f8ad6764debf6ccf99925fde56a1"
+          ]
+        }
+      },
+      {
+        "case_id": "Q13",
+        "question": "Which review reports an itchy scalp after using the product?",
+        "product": "B00YQ6X8EO",
+        "month": "2021-06",
+        "relevant_ids": [
+          "AMZ-a4513f218e38cd9bbbc0e3b734ab4b0c0ed727580efae8f2a5f3f676349617f8"
+        ],
+        "returned_ids": [
+          "AMZ-a4513f218e38cd9bbbc0e3b734ab4b0c0ed727580efae8f2a5f3f676349617f8",
+          "AMZ-c30069a9a074c28feef349afe3e614afa8fc60a5f6b7f7d335bd7ce22750803a",
+          "AMZ-f628e422528002bed12112d4e2d53ebbb3a7f07c43e1f8ce91008bb1439baa91",
+          "AMZ-a912ce622e6c58bc078813f255a98f5480580c395fb24362140e3d9d7756e4e9",
+          "AMZ-66eae4dc0bd1e8de5d874a6b705826cc56cfa2cbf8ad5622ee4e36cb46d0d373",
+          "AMZ-0b72d5276ba586898e040300063055e02e00429cc1b20a9a3bb12d3ce8f50bb3"
+        ],
+        "similarities": [
+          0.4712,
+          0.3594,
+          0.3327,
+          0.2997,
+          0.2834,
+          0.2821
+        ],
+        "latency_ms": 8.22,
+        "metrics": {
+          "precision_at_k": 0.16666666666666666,
+          "recall_at_k": 1.0,
+          "reciprocal_rank_at_k": 1.0,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-c30069a9a074c28feef349afe3e614afa8fc60a5f6b7f7d335bd7ce22750803a",
+            "AMZ-f628e422528002bed12112d4e2d53ebbb3a7f07c43e1f8ce91008bb1439baa91",
+            "AMZ-a912ce622e6c58bc078813f255a98f5480580c395fb24362140e3d9d7756e4e9",
+            "AMZ-66eae4dc0bd1e8de5d874a6b705826cc56cfa2cbf8ad5622ee4e36cb46d0d373",
+            "AMZ-0b72d5276ba586898e040300063055e02e00429cc1b20a9a3bb12d3ce8f50bb3"
+          ]
+        }
+      },
+      {
+        "case_id": "Q14",
+        "question": "Which reviews say the fragrance fades or is weak after drying?",
+        "product": "B00YQ6X8EO",
+        "month": "2021-06",
+        "relevant_ids": [
+          "AMZ-29f36396a30ab0db65aa8259e592fc0cc3d1f8ad6764debf6ccf99925fde56a1",
+          "AMZ-66eae4dc0bd1e8de5d874a6b705826cc56cfa2cbf8ad5622ee4e36cb46d0d373"
+        ],
+        "returned_ids": [
+          "AMZ-29f36396a30ab0db65aa8259e592fc0cc3d1f8ad6764debf6ccf99925fde56a1",
+          "AMZ-763fcc31d0627bd1c44087bc7a77ef344d1e154ccd0c2619343fb19b0d549601",
+          "AMZ-2f0c96cde5b4d3c90c667ba6ccc2f1e4f558530b6f64430b47f6a4a655fb8cfc",
+          "AMZ-f628e422528002bed12112d4e2d53ebbb3a7f07c43e1f8ce91008bb1439baa91",
+          "AMZ-c30069a9a074c28feef349afe3e614afa8fc60a5f6b7f7d335bd7ce22750803a",
+          "AMZ-a912ce622e6c58bc078813f255a98f5480580c395fb24362140e3d9d7756e4e9"
+        ],
+        "similarities": [
+          0.4987,
+          0.4643,
+          0.4392,
+          0.4244,
+          0.3763,
+          0.3435
+        ],
+        "latency_ms": 8.13,
+        "metrics": {
+          "precision_at_k": 0.16666666666666666,
+          "recall_at_k": 0.5,
+          "reciprocal_rank_at_k": 1.0,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [
+            "AMZ-66eae4dc0bd1e8de5d874a6b705826cc56cfa2cbf8ad5622ee4e36cb46d0d373"
+          ],
+          "irrelevant_returned_ids": [
+            "AMZ-763fcc31d0627bd1c44087bc7a77ef344d1e154ccd0c2619343fb19b0d549601",
+            "AMZ-2f0c96cde5b4d3c90c667ba6ccc2f1e4f558530b6f64430b47f6a4a655fb8cfc",
+            "AMZ-f628e422528002bed12112d4e2d53ebbb3a7f07c43e1f8ce91008bb1439baa91",
+            "AMZ-c30069a9a074c28feef349afe3e614afa8fc60a5f6b7f7d335bd7ce22750803a",
+            "AMZ-a912ce622e6c58bc078813f255a98f5480580c395fb24362140e3d9d7756e4e9"
+          ]
+        }
+      },
+      {
+        "case_id": "Q15",
+        "question": "Which review says the waves do not last long?",
+        "product": "B00YQ6X8EO",
+        "month": "2021-06",
+        "relevant_ids": [
+          "AMZ-763fcc31d0627bd1c44087bc7a77ef344d1e154ccd0c2619343fb19b0d549601"
+        ],
+        "returned_ids": [
+          "AMZ-763fcc31d0627bd1c44087bc7a77ef344d1e154ccd0c2619343fb19b0d549601",
+          "AMZ-66eae4dc0bd1e8de5d874a6b705826cc56cfa2cbf8ad5622ee4e36cb46d0d373",
+          "AMZ-29f36396a30ab0db65aa8259e592fc0cc3d1f8ad6764debf6ccf99925fde56a1",
+          "AMZ-f628e422528002bed12112d4e2d53ebbb3a7f07c43e1f8ce91008bb1439baa91",
+          "AMZ-a4513f218e38cd9bbbc0e3b734ab4b0c0ed727580efae8f2a5f3f676349617f8",
+          "AMZ-a912ce622e6c58bc078813f255a98f5480580c395fb24362140e3d9d7756e4e9"
+        ],
+        "similarities": [
+          0.605,
+          0.2078,
+          0.18,
+          0.1778,
+          0.1404,
+          0.1205
+        ],
+        "latency_ms": 7.72,
+        "metrics": {
+          "precision_at_k": 0.16666666666666666,
+          "recall_at_k": 1.0,
+          "reciprocal_rank_at_k": 1.0,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-66eae4dc0bd1e8de5d874a6b705826cc56cfa2cbf8ad5622ee4e36cb46d0d373",
+            "AMZ-29f36396a30ab0db65aa8259e592fc0cc3d1f8ad6764debf6ccf99925fde56a1",
+            "AMZ-f628e422528002bed12112d4e2d53ebbb3a7f07c43e1f8ce91008bb1439baa91",
+            "AMZ-a4513f218e38cd9bbbc0e3b734ab4b0c0ed727580efae8f2a5f3f676349617f8",
+            "AMZ-a912ce622e6c58bc078813f255a98f5480580c395fb24362140e3d9d7756e4e9"
+          ]
+        }
+      },
+      {
+        "case_id": "Q16",
+        "question": "Which review mentions that the product cannot be returned?",
+        "product": "B00YQ6X8EO",
+        "month": "2021-06",
+        "relevant_ids": [
+          "AMZ-a4513f218e38cd9bbbc0e3b734ab4b0c0ed727580efae8f2a5f3f676349617f8"
+        ],
+        "returned_ids": [
+          "AMZ-a4513f218e38cd9bbbc0e3b734ab4b0c0ed727580efae8f2a5f3f676349617f8",
+          "AMZ-f628e422528002bed12112d4e2d53ebbb3a7f07c43e1f8ce91008bb1439baa91",
+          "AMZ-66eae4dc0bd1e8de5d874a6b705826cc56cfa2cbf8ad5622ee4e36cb46d0d373",
+          "AMZ-c30069a9a074c28feef349afe3e614afa8fc60a5f6b7f7d335bd7ce22750803a",
+          "AMZ-2f0c96cde5b4d3c90c667ba6ccc2f1e4f558530b6f64430b47f6a4a655fb8cfc",
+          "AMZ-29f36396a30ab0db65aa8259e592fc0cc3d1f8ad6764debf6ccf99925fde56a1"
+        ],
+        "similarities": [
+          0.2678,
+          0.2586,
+          0.2368,
+          0.2313,
+          0.1628,
+          0.133
+        ],
+        "latency_ms": 8.0,
+        "metrics": {
+          "precision_at_k": 0.16666666666666666,
+          "recall_at_k": 1.0,
+          "reciprocal_rank_at_k": 1.0,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-f628e422528002bed12112d4e2d53ebbb3a7f07c43e1f8ce91008bb1439baa91",
+            "AMZ-66eae4dc0bd1e8de5d874a6b705826cc56cfa2cbf8ad5622ee4e36cb46d0d373",
+            "AMZ-c30069a9a074c28feef349afe3e614afa8fc60a5f6b7f7d335bd7ce22750803a",
+            "AMZ-2f0c96cde5b4d3c90c667ba6ccc2f1e4f558530b6f64430b47f6a4a655fb8cfc",
+            "AMZ-29f36396a30ab0db65aa8259e592fc0cc3d1f8ad6764debf6ccf99925fde56a1"
+          ]
+        }
+      },
+      {
+        "case_id": "Q17",
+        "question": "Which reviews discuss soft hair or curls without stiffness or crunch?",
+        "product": "B00YQ6X8EO",
+        "month": "2021-06",
+        "relevant_ids": [
+          "AMZ-29f36396a30ab0db65aa8259e592fc0cc3d1f8ad6764debf6ccf99925fde56a1",
+          "AMZ-66eae4dc0bd1e8de5d874a6b705826cc56cfa2cbf8ad5622ee4e36cb46d0d373"
+        ],
+        "returned_ids": [
+          "AMZ-66eae4dc0bd1e8de5d874a6b705826cc56cfa2cbf8ad5622ee4e36cb46d0d373",
+          "AMZ-c30069a9a074c28feef349afe3e614afa8fc60a5f6b7f7d335bd7ce22750803a",
+          "AMZ-a4513f218e38cd9bbbc0e3b734ab4b0c0ed727580efae8f2a5f3f676349617f8",
+          "AMZ-a912ce622e6c58bc078813f255a98f5480580c395fb24362140e3d9d7756e4e9",
+          "AMZ-29f36396a30ab0db65aa8259e592fc0cc3d1f8ad6764debf6ccf99925fde56a1",
+          "AMZ-f628e422528002bed12112d4e2d53ebbb3a7f07c43e1f8ce91008bb1439baa91"
+        ],
+        "similarities": [
+          0.5482,
+          0.4854,
+          0.3926,
+          0.3707,
+          0.3299,
+          0.2974
+        ],
+        "latency_ms": 8.51,
+        "metrics": {
+          "precision_at_k": 0.3333333333333333,
+          "recall_at_k": 1.0,
+          "reciprocal_rank_at_k": 1.0,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-c30069a9a074c28feef349afe3e614afa8fc60a5f6b7f7d335bd7ce22750803a",
+            "AMZ-a4513f218e38cd9bbbc0e3b734ab4b0c0ed727580efae8f2a5f3f676349617f8",
+            "AMZ-a912ce622e6c58bc078813f255a98f5480580c395fb24362140e3d9d7756e4e9",
+            "AMZ-f628e422528002bed12112d4e2d53ebbb3a7f07c43e1f8ce91008bb1439baa91"
+          ]
+        }
+      },
+      {
+        "case_id": "Q18",
+        "question": "Which reviews describe continuous spray or a long spray from one trigger pull?",
+        "product": "B07C533XCW",
+        "month": "2019-07",
+        "relevant_ids": [
+          "AMZ-914527a28b65b911747bfd5da9012a60999afefd0de5c738802fb67263811101",
+          "AMZ-c37cbbfdcedfa399dbdb538ff63e7804176bee523bff2553d8d3cd52dfd9bd84",
+          "AMZ-f8a2472339a73d6ae30400005a397b6dc37552491424502c6a78b487ebaa61c0"
+        ],
+        "returned_ids": [
+          "AMZ-c37cbbfdcedfa399dbdb538ff63e7804176bee523bff2553d8d3cd52dfd9bd84",
+          "AMZ-914527a28b65b911747bfd5da9012a60999afefd0de5c738802fb67263811101",
+          "AMZ-f8a2472339a73d6ae30400005a397b6dc37552491424502c6a78b487ebaa61c0",
+          "AMZ-6a34751921f5a5ec1bc1a619974014864ce64d0700ced9e42277f92769132720",
+          "AMZ-5e69d18adc2deccb0e89ac35e7e02f1d5cee26b3bbbe441b43434267684bc3f4",
+          "AMZ-8c18ca8405095a441bcb8557b55f63de31d1ec9adc48f54e5881c50dc00af477"
+        ],
+        "similarities": [
+          0.6282,
+          0.5401,
+          0.5365,
+          0.3794,
+          0.1608,
+          0.1189
+        ],
+        "latency_ms": 8.93,
+        "metrics": {
+          "precision_at_k": 0.5,
+          "recall_at_k": 1.0,
+          "reciprocal_rank_at_k": 1.0,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-6a34751921f5a5ec1bc1a619974014864ce64d0700ced9e42277f92769132720",
+            "AMZ-5e69d18adc2deccb0e89ac35e7e02f1d5cee26b3bbbe441b43434267684bc3f4",
+            "AMZ-8c18ca8405095a441bcb8557b55f63de31d1ec9adc48f54e5881c50dc00af477"
+          ]
+        }
+      },
+      {
+        "case_id": "Q19",
+        "question": "Which review says stored water develops a musty smell?",
+        "product": "B07C533XCW",
+        "month": "2019-07",
+        "relevant_ids": [
+          "AMZ-1e011f905622d8d79b5e65932898814e71d5039ffb788fa23a03b0e0fd9ab391"
+        ],
+        "returned_ids": [
+          "AMZ-1e011f905622d8d79b5e65932898814e71d5039ffb788fa23a03b0e0fd9ab391",
+          "AMZ-6a34751921f5a5ec1bc1a619974014864ce64d0700ced9e42277f92769132720",
+          "AMZ-914527a28b65b911747bfd5da9012a60999afefd0de5c738802fb67263811101",
+          "AMZ-c37cbbfdcedfa399dbdb538ff63e7804176bee523bff2553d8d3cd52dfd9bd84",
+          "AMZ-f8a2472339a73d6ae30400005a397b6dc37552491424502c6a78b487ebaa61c0",
+          "AMZ-5e69d18adc2deccb0e89ac35e7e02f1d5cee26b3bbbe441b43434267684bc3f4"
+        ],
+        "similarities": [
+          0.6589,
+          0.2884,
+          0.1672,
+          0.1175,
+          0.1161,
+          0.0051
+        ],
+        "latency_ms": 8.16,
+        "metrics": {
+          "precision_at_k": 0.16666666666666666,
+          "recall_at_k": 1.0,
+          "reciprocal_rank_at_k": 1.0,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-6a34751921f5a5ec1bc1a619974014864ce64d0700ced9e42277f92769132720",
+            "AMZ-914527a28b65b911747bfd5da9012a60999afefd0de5c738802fb67263811101",
+            "AMZ-c37cbbfdcedfa399dbdb538ff63e7804176bee523bff2553d8d3cd52dfd9bd84",
+            "AMZ-f8a2472339a73d6ae30400005a397b6dc37552491424502c6a78b487ebaa61c0",
+            "AMZ-5e69d18adc2deccb0e89ac35e7e02f1d5cee26b3bbbe441b43434267684bc3f4"
+          ]
+        }
+      },
+      {
+        "case_id": "Q20",
+        "question": "Which reviews describe a gentle or light mist?",
+        "product": "B07C533XCW",
+        "month": "2019-07",
+        "relevant_ids": [
+          "AMZ-914527a28b65b911747bfd5da9012a60999afefd0de5c738802fb67263811101",
+          "AMZ-6a34751921f5a5ec1bc1a619974014864ce64d0700ced9e42277f92769132720"
+        ],
+        "returned_ids": [
+          "AMZ-6a34751921f5a5ec1bc1a619974014864ce64d0700ced9e42277f92769132720",
+          "AMZ-914527a28b65b911747bfd5da9012a60999afefd0de5c738802fb67263811101",
+          "AMZ-1e011f905622d8d79b5e65932898814e71d5039ffb788fa23a03b0e0fd9ab391",
+          "AMZ-c37cbbfdcedfa399dbdb538ff63e7804176bee523bff2553d8d3cd52dfd9bd84",
+          "AMZ-f8a2472339a73d6ae30400005a397b6dc37552491424502c6a78b487ebaa61c0",
+          "AMZ-8c18ca8405095a441bcb8557b55f63de31d1ec9adc48f54e5881c50dc00af477"
+        ],
+        "similarities": [
+          0.6048,
+          0.474,
+          0.3386,
+          0.3236,
+          0.2715,
+          0.1055
+        ],
+        "latency_ms": 7.69,
+        "metrics": {
+          "precision_at_k": 0.3333333333333333,
+          "recall_at_k": 1.0,
+          "reciprocal_rank_at_k": 1.0,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-1e011f905622d8d79b5e65932898814e71d5039ffb788fa23a03b0e0fd9ab391",
+            "AMZ-c37cbbfdcedfa399dbdb538ff63e7804176bee523bff2553d8d3cd52dfd9bd84",
+            "AMZ-f8a2472339a73d6ae30400005a397b6dc37552491424502c6a78b487ebaa61c0",
+            "AMZ-8c18ca8405095a441bcb8557b55f63de31d1ec9adc48f54e5881c50dc00af477"
+          ]
+        }
+      },
+      {
+        "case_id": "Q21",
+        "question": "Which reviews report a shattered glass bottle on delivery?",
+        "product": "B00YQ6X8EO",
+        "month": "2021-06",
+        "relevant_ids": [],
+        "returned_ids": [
+          "AMZ-66eae4dc0bd1e8de5d874a6b705826cc56cfa2cbf8ad5622ee4e36cb46d0d373",
+          "AMZ-763fcc31d0627bd1c44087bc7a77ef344d1e154ccd0c2619343fb19b0d549601",
+          "AMZ-f628e422528002bed12112d4e2d53ebbb3a7f07c43e1f8ce91008bb1439baa91",
+          "AMZ-2f0c96cde5b4d3c90c667ba6ccc2f1e4f558530b6f64430b47f6a4a655fb8cfc",
+          "AMZ-a4513f218e38cd9bbbc0e3b734ab4b0c0ed727580efae8f2a5f3f676349617f8",
+          "AMZ-0b72d5276ba586898e040300063055e02e00429cc1b20a9a3bb12d3ce8f50bb3"
+        ],
+        "similarities": [
+          0.194,
+          0.1697,
+          0.1384,
+          0.1253,
+          0.0924,
+          0.0644
+        ],
+        "latency_ms": 8.08,
+        "metrics": {
+          "precision_at_k": null,
+          "recall_at_k": null,
+          "reciprocal_rank_at_k": null,
+          "hit_at_k": null,
+          "unsupported_return": true,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-66eae4dc0bd1e8de5d874a6b705826cc56cfa2cbf8ad5622ee4e36cb46d0d373",
+            "AMZ-763fcc31d0627bd1c44087bc7a77ef344d1e154ccd0c2619343fb19b0d549601",
+            "AMZ-f628e422528002bed12112d4e2d53ebbb3a7f07c43e1f8ce91008bb1439baa91",
+            "AMZ-2f0c96cde5b4d3c90c667ba6ccc2f1e4f558530b6f64430b47f6a4a655fb8cfc",
+            "AMZ-a4513f218e38cd9bbbc0e3b734ab4b0c0ed727580efae8f2a5f3f676349617f8",
+            "AMZ-0b72d5276ba586898e040300063055e02e00429cc1b20a9a3bb12d3ce8f50bb3"
+          ]
+        }
+      },
+      {
+        "case_id": "Q22",
+        "question": "Which reviews report a battery catching fire?",
+        "product": "B07C533XCW",
+        "month": "2019-07",
+        "relevant_ids": [],
+        "returned_ids": [
+          "AMZ-8c18ca8405095a441bcb8557b55f63de31d1ec9adc48f54e5881c50dc00af477",
+          "AMZ-c37cbbfdcedfa399dbdb538ff63e7804176bee523bff2553d8d3cd52dfd9bd84",
+          "AMZ-6a34751921f5a5ec1bc1a619974014864ce64d0700ced9e42277f92769132720",
+          "AMZ-1e011f905622d8d79b5e65932898814e71d5039ffb788fa23a03b0e0fd9ab391",
+          "AMZ-914527a28b65b911747bfd5da9012a60999afefd0de5c738802fb67263811101",
+          "AMZ-f8a2472339a73d6ae30400005a397b6dc37552491424502c6a78b487ebaa61c0"
+        ],
+        "similarities": [
+          0.1354,
+          0.0945,
+          0.0906,
+          0.0697,
+          0.0381,
+          0.036
+        ],
+        "latency_ms": 7.87,
+        "metrics": {
+          "precision_at_k": null,
+          "recall_at_k": null,
+          "reciprocal_rank_at_k": null,
+          "hit_at_k": null,
+          "unsupported_return": true,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-8c18ca8405095a441bcb8557b55f63de31d1ec9adc48f54e5881c50dc00af477",
+            "AMZ-c37cbbfdcedfa399dbdb538ff63e7804176bee523bff2553d8d3cd52dfd9bd84",
+            "AMZ-6a34751921f5a5ec1bc1a619974014864ce64d0700ced9e42277f92769132720",
+            "AMZ-1e011f905622d8d79b5e65932898814e71d5039ffb788fa23a03b0e0fd9ab391",
+            "AMZ-914527a28b65b911747bfd5da9012a60999afefd0de5c738802fb67263811101",
+            "AMZ-f8a2472339a73d6ae30400005a397b6dc37552491424502c6a78b487ebaa61c0"
+          ]
+        }
+      },
+      {
+        "case_id": "Q23",
+        "question": "Which reviews prove that the necklace cures eczema?",
+        "product": "B0107QYW14",
+        "month": "2016-04",
+        "relevant_ids": [],
+        "returned_ids": [
+          "AMZ-64446056e10e70892a6ff0cf2f8f21d0729f5e54e4470b1561a835dc8cb23605",
+          "AMZ-778ee96695eccb0afa524b0dddb1615dd4a4acf2476cd13d8a285f93b7d8d04d",
+          "AMZ-a003e6ea21defd6ffc72baa66e5968ba2a61667f6c01f5a7821af37d1057799e",
+          "AMZ-2fa2b421b1cdd827a06a9741d8c57f2df7e072cfb6640cb8007c32a82ec81a11",
+          "AMZ-6bcc3fb11ae5cb039c5d3cf127c83cb753697baac4010287af003d20d27c58ad",
+          "AMZ-ce88ec5676de8c5739981d620f166435d37e8ae0fad8a6087b729dbe52f5c738"
+        ],
+        "similarities": [
+          0.361,
+          0.3606,
+          0.2221,
+          0.2095,
+          0.2002,
+          0.1532
+        ],
+        "latency_ms": 8.13,
+        "metrics": {
+          "precision_at_k": null,
+          "recall_at_k": null,
+          "reciprocal_rank_at_k": null,
+          "hit_at_k": null,
+          "unsupported_return": true,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-64446056e10e70892a6ff0cf2f8f21d0729f5e54e4470b1561a835dc8cb23605",
+            "AMZ-778ee96695eccb0afa524b0dddb1615dd4a4acf2476cd13d8a285f93b7d8d04d",
+            "AMZ-a003e6ea21defd6ffc72baa66e5968ba2a61667f6c01f5a7821af37d1057799e",
+            "AMZ-2fa2b421b1cdd827a06a9741d8c57f2df7e072cfb6640cb8007c32a82ec81a11",
+            "AMZ-6bcc3fb11ae5cb039c5d3cf127c83cb753697baac4010287af003d20d27c58ad",
+            "AMZ-ce88ec5676de8c5739981d620f166435d37e8ae0fad8a6087b729dbe52f5c738"
+          ]
+        }
+      },
+      {
+        "case_id": "Q24",
+        "question": "Which reviews report an unauthorized credit card charge?",
+        "product": "B0107QYW14",
+        "month": "2016-05",
+        "relevant_ids": [],
+        "returned_ids": [
+          "AMZ-251c2f5dcb8bebb95b532c9678926f731e4e9d4010797afeffc2c06f71e7e3a8",
+          "AMZ-62da069328d858d3eb823120ea30bfcae207ac4a50b3f607b444687838bb5f20",
+          "AMZ-fdb7580af2fc80b75093c6c37d6f9ca7c7fcdd491b2141ebadb742728dae7f01",
+          "AMZ-06dd1695dfb061f9bbcd7619c0c59cf5225f56e8fbdcaa53dfd1d5d530174924",
+          "AMZ-98984ce510f6564345b822e41d1452522471ae469ca363bf450061880aadf0d5",
+          "AMZ-4cdc3ade60cd381cb7cca46f6fae69325be6b89a7a2356a88be63735afc8431d"
+        ],
+        "similarities": [
+          0.1307,
+          0.1241,
+          0.1083,
+          0.0848,
+          0.0809,
+          0.0444
+        ],
+        "latency_ms": 7.96,
+        "metrics": {
+          "precision_at_k": null,
+          "recall_at_k": null,
+          "reciprocal_rank_at_k": null,
+          "hit_at_k": null,
+          "unsupported_return": true,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-251c2f5dcb8bebb95b532c9678926f731e4e9d4010797afeffc2c06f71e7e3a8",
+            "AMZ-62da069328d858d3eb823120ea30bfcae207ac4a50b3f607b444687838bb5f20",
+            "AMZ-fdb7580af2fc80b75093c6c37d6f9ca7c7fcdd491b2141ebadb742728dae7f01",
+            "AMZ-06dd1695dfb061f9bbcd7619c0c59cf5225f56e8fbdcaa53dfd1d5d530174924",
+            "AMZ-98984ce510f6564345b822e41d1452522471ae469ca363bf450061880aadf0d5",
+            "AMZ-4cdc3ade60cd381cb7cca46f6fae69325be6b89a7a2356a88be63735afc8431d"
+          ]
+        }
+      }
+    ],
+    "keyword": [
+      {
+        "case_id": "Q01",
+        "question": "Which reviews say the color differs from the product picture?",
+        "product": "B0107QYW14",
+        "month": "2016-04",
+        "relevant_ids": [
+          "AMZ-2fa2b421b1cdd827a06a9741d8c57f2df7e072cfb6640cb8007c32a82ec81a11",
+          "AMZ-ce88ec5676de8c5739981d620f166435d37e8ae0fad8a6087b729dbe52f5c738",
+          "AMZ-a003e6ea21defd6ffc72baa66e5968ba2a61667f6c01f5a7821af37d1057799e"
+        ],
+        "returned_ids": [
+          "AMZ-2fa2b421b1cdd827a06a9741d8c57f2df7e072cfb6640cb8007c32a82ec81a11",
+          "AMZ-ce88ec5676de8c5739981d620f166435d37e8ae0fad8a6087b729dbe52f5c738",
+          "AMZ-38cdde76f425b11cd22764157c42721d317cfa5d79a208f30d6939771260a5e6",
+          "AMZ-b7b338502400e2642e5a597238a3d74d13758e6551962ee684c12fa09a1391b9"
+        ],
+        "similarities": null,
+        "latency_ms": 0.63,
+        "metrics": {
+          "precision_at_k": 0.3333333333333333,
+          "recall_at_k": 0.6666666666666666,
+          "reciprocal_rank_at_k": 1.0,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [
+            "AMZ-a003e6ea21defd6ffc72baa66e5968ba2a61667f6c01f5a7821af37d1057799e"
+          ],
+          "irrelevant_returned_ids": [
+            "AMZ-38cdde76f425b11cd22764157c42721d317cfa5d79a208f30d6939771260a5e6",
+            "AMZ-b7b338502400e2642e5a597238a3d74d13758e6551962ee684c12fa09a1391b9"
+          ]
+        }
+      },
+      {
+        "case_id": "Q02",
+        "question": "Which review reports a weak fastening clasp?",
+        "product": "B0107QYW14",
+        "month": "2016-04",
+        "relevant_ids": [
+          "AMZ-a003e6ea21defd6ffc72baa66e5968ba2a61667f6c01f5a7821af37d1057799e"
+        ],
+        "returned_ids": [
+          "AMZ-a003e6ea21defd6ffc72baa66e5968ba2a61667f6c01f5a7821af37d1057799e"
+        ],
+        "similarities": null,
+        "latency_ms": 0.36,
+        "metrics": {
+          "precision_at_k": 0.16666666666666666,
+          "recall_at_k": 1.0,
+          "reciprocal_rank_at_k": 1.0,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": []
+        }
+      },
+      {
+        "case_id": "Q03",
+        "question": "Find a review reporting a crooked glued stone.",
+        "product": "B0107QYW14",
+        "month": "2016-04",
+        "relevant_ids": [
+          "AMZ-64446056e10e70892a6ff0cf2f8f21d0729f5e54e4470b1561a835dc8cb23605"
+        ],
+        "returned_ids": [
+          "AMZ-64446056e10e70892a6ff0cf2f8f21d0729f5e54e4470b1561a835dc8cb23605",
+          "AMZ-ce88ec5676de8c5739981d620f166435d37e8ae0fad8a6087b729dbe52f5c738",
+          "AMZ-a003e6ea21defd6ffc72baa66e5968ba2a61667f6c01f5a7821af37d1057799e"
+        ],
+        "similarities": null,
+        "latency_ms": 0.32,
+        "metrics": {
+          "precision_at_k": 0.16666666666666666,
+          "recall_at_k": 1.0,
+          "reciprocal_rank_at_k": 1.0,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-ce88ec5676de8c5739981d620f166435d37e8ae0fad8a6087b729dbe52f5c738",
+            "AMZ-a003e6ea21defd6ffc72baa66e5968ba2a61667f6c01f5a7821af37d1057799e"
+          ]
+        }
+      },
+      {
+        "case_id": "Q04",
+        "question": "Which reviewer received the order ahead of schedule?",
+        "product": "B0107QYW14",
+        "month": "2016-04",
+        "relevant_ids": [
+          "AMZ-35441e096e254b9c30e87a9d4c9437c04c93c6faeb8394627ec91634a965a5b6"
+        ],
+        "returned_ids": [
+          "AMZ-35441e096e254b9c30e87a9d4c9437c04c93c6faeb8394627ec91634a965a5b6",
+          "AMZ-2fa2b421b1cdd827a06a9741d8c57f2df7e072cfb6640cb8007c32a82ec81a11",
+          "AMZ-ce88ec5676de8c5739981d620f166435d37e8ae0fad8a6087b729dbe52f5c738"
+        ],
+        "similarities": null,
+        "latency_ms": 0.32,
+        "metrics": {
+          "precision_at_k": 0.16666666666666666,
+          "recall_at_k": 1.0,
+          "reciprocal_rank_at_k": 1.0,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-2fa2b421b1cdd827a06a9741d8c57f2df7e072cfb6640cb8007c32a82ec81a11",
+            "AMZ-ce88ec5676de8c5739981d620f166435d37e8ae0fad8a6087b729dbe52f5c738"
+          ]
+        }
+      },
+      {
+        "case_id": "Q05",
+        "question": "Which reviews praise the low price or value for money?",
+        "product": "B0107QYW14",
+        "month": "2016-04",
+        "relevant_ids": [
+          "AMZ-778ee96695eccb0afa524b0dddb1615dd4a4acf2476cd13d8a285f93b7d8d04d",
+          "AMZ-35441e096e254b9c30e87a9d4c9437c04c93c6faeb8394627ec91634a965a5b6",
+          "AMZ-ce88ec5676de8c5739981d620f166435d37e8ae0fad8a6087b729dbe52f5c738"
+        ],
+        "returned_ids": [
+          "AMZ-ce88ec5676de8c5739981d620f166435d37e8ae0fad8a6087b729dbe52f5c738",
+          "AMZ-35441e096e254b9c30e87a9d4c9437c04c93c6faeb8394627ec91634a965a5b6"
+        ],
+        "similarities": null,
+        "latency_ms": 0.29,
+        "metrics": {
+          "precision_at_k": 0.3333333333333333,
+          "recall_at_k": 0.6666666666666666,
+          "reciprocal_rank_at_k": 1.0,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [
+            "AMZ-778ee96695eccb0afa524b0dddb1615dd4a4acf2476cd13d8a285f93b7d8d04d"
+          ],
+          "irrelevant_returned_ids": []
+        }
+      },
+      {
+        "case_id": "Q06",
+        "question": "Which reviews mention that the pendant is too large?",
+        "product": "B0107QYW14",
+        "month": "2016-04",
+        "relevant_ids": [
+          "AMZ-a003e6ea21defd6ffc72baa66e5968ba2a61667f6c01f5a7821af37d1057799e"
+        ],
+        "returned_ids": [
+          "AMZ-64446056e10e70892a6ff0cf2f8f21d0729f5e54e4470b1561a835dc8cb23605",
+          "AMZ-6bcc3fb11ae5cb039c5d3cf127c83cb753697baac4010287af003d20d27c58ad",
+          "AMZ-a003e6ea21defd6ffc72baa66e5968ba2a61667f6c01f5a7821af37d1057799e",
+          "AMZ-b7b338502400e2642e5a597238a3d74d13758e6551962ee684c12fa09a1391b9"
+        ],
+        "similarities": null,
+        "latency_ms": 0.32,
+        "metrics": {
+          "precision_at_k": 0.16666666666666666,
+          "recall_at_k": 1.0,
+          "reciprocal_rank_at_k": 0.3333333333333333,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-64446056e10e70892a6ff0cf2f8f21d0729f5e54e4470b1561a835dc8cb23605",
+            "AMZ-6bcc3fb11ae5cb039c5d3cf127c83cb753697baac4010287af003d20d27c58ad",
+            "AMZ-b7b338502400e2642e5a597238a3d74d13758e6551962ee684c12fa09a1391b9"
+          ]
+        }
+      },
+      {
+        "case_id": "Q07",
+        "question": "Which review says the necklace is light and comfortable rather than heavy?",
+        "product": "B0107QYW14",
+        "month": "2016-05",
+        "relevant_ids": [
+          "AMZ-06dd1695dfb061f9bbcd7619c0c59cf5225f56e8fbdcaa53dfd1d5d530174924"
+        ],
+        "returned_ids": [
+          "AMZ-06dd1695dfb061f9bbcd7619c0c59cf5225f56e8fbdcaa53dfd1d5d530174924",
+          "AMZ-72fb860f5c74ef649629a5f0a396a48502f5e2ef15d5d40cb767269d513ca26f",
+          "AMZ-b4bc8f4946e904c5960c91dbebb02586769800aab445cfd78d40d231052f9fae",
+          "AMZ-fdb7580af2fc80b75093c6c37d6f9ca7c7fcdd491b2141ebadb742728dae7f01",
+          "AMZ-62da069328d858d3eb823120ea30bfcae207ac4a50b3f607b444687838bb5f20",
+          "AMZ-118fb0e2e166ba1dc6b4ec3e84a33d6f93b4693471c860c74d3b028635e0a6a1"
+        ],
+        "similarities": null,
+        "latency_ms": 0.32,
+        "metrics": {
+          "precision_at_k": 0.16666666666666666,
+          "recall_at_k": 1.0,
+          "reciprocal_rank_at_k": 1.0,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-72fb860f5c74ef649629a5f0a396a48502f5e2ef15d5d40cb767269d513ca26f",
+            "AMZ-b4bc8f4946e904c5960c91dbebb02586769800aab445cfd78d40d231052f9fae",
+            "AMZ-fdb7580af2fc80b75093c6c37d6f9ca7c7fcdd491b2141ebadb742728dae7f01",
+            "AMZ-62da069328d858d3eb823120ea30bfcae207ac4a50b3f607b444687838bb5f20",
+            "AMZ-118fb0e2e166ba1dc6b4ec3e84a33d6f93b4693471c860c74d3b028635e0a6a1"
+          ]
+        }
+      },
+      {
+        "case_id": "Q08",
+        "question": "Which review suggests the necklace would make a gift?",
+        "product": "B0107QYW14",
+        "month": "2016-05",
+        "relevant_ids": [
+          "AMZ-b4bc8f4946e904c5960c91dbebb02586769800aab445cfd78d40d231052f9fae"
+        ],
+        "returned_ids": [
+          "AMZ-b4bc8f4946e904c5960c91dbebb02586769800aab445cfd78d40d231052f9fae",
+          "AMZ-06dd1695dfb061f9bbcd7619c0c59cf5225f56e8fbdcaa53dfd1d5d530174924",
+          "AMZ-fdb7580af2fc80b75093c6c37d6f9ca7c7fcdd491b2141ebadb742728dae7f01",
+          "AMZ-72fb860f5c74ef649629a5f0a396a48502f5e2ef15d5d40cb767269d513ca26f"
+        ],
+        "similarities": null,
+        "latency_ms": 0.29,
+        "metrics": {
+          "precision_at_k": 0.16666666666666666,
+          "recall_at_k": 1.0,
+          "reciprocal_rank_at_k": 1.0,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-06dd1695dfb061f9bbcd7619c0c59cf5225f56e8fbdcaa53dfd1d5d530174924",
+            "AMZ-fdb7580af2fc80b75093c6c37d6f9ca7c7fcdd491b2141ebadb742728dae7f01",
+            "AMZ-72fb860f5c74ef649629a5f0a396a48502f5e2ef15d5d40cb767269d513ca26f"
+          ]
+        }
+      },
+      {
+        "case_id": "Q09",
+        "question": "Which review raises concerns about manufacturing labor conditions?",
+        "product": "B0107QYW14",
+        "month": "2016-05",
+        "relevant_ids": [
+          "AMZ-fdb7580af2fc80b75093c6c37d6f9ca7c7fcdd491b2141ebadb742728dae7f01"
+        ],
+        "returned_ids": [
+          "AMZ-06dd1695dfb061f9bbcd7619c0c59cf5225f56e8fbdcaa53dfd1d5d530174924",
+          "AMZ-72fb860f5c74ef649629a5f0a396a48502f5e2ef15d5d40cb767269d513ca26f"
+        ],
+        "similarities": null,
+        "latency_ms": 0.3,
+        "metrics": {
+          "precision_at_k": 0.0,
+          "recall_at_k": 0.0,
+          "reciprocal_rank_at_k": 0.0,
+          "hit_at_k": 0,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [
+            "AMZ-fdb7580af2fc80b75093c6c37d6f9ca7c7fcdd491b2141ebadb742728dae7f01"
+          ],
+          "irrelevant_returned_ids": [
+            "AMZ-06dd1695dfb061f9bbcd7619c0c59cf5225f56e8fbdcaa53dfd1d5d530174924",
+            "AMZ-72fb860f5c74ef649629a5f0a396a48502f5e2ef15d5d40cb767269d513ca26f"
+          ]
+        }
+      },
+      {
+        "case_id": "Q10",
+        "question": "Which reviews complain that the item looks cheap?",
+        "product": "B0107QYW14",
+        "month": "2016-05",
+        "relevant_ids": [
+          "AMZ-62da069328d858d3eb823120ea30bfcae207ac4a50b3f607b444687838bb5f20",
+          "AMZ-118fb0e2e166ba1dc6b4ec3e84a33d6f93b4693471c860c74d3b028635e0a6a1"
+        ],
+        "returned_ids": [
+          "AMZ-118fb0e2e166ba1dc6b4ec3e84a33d6f93b4693471c860c74d3b028635e0a6a1",
+          "AMZ-06dd1695dfb061f9bbcd7619c0c59cf5225f56e8fbdcaa53dfd1d5d530174924",
+          "AMZ-62da069328d858d3eb823120ea30bfcae207ac4a50b3f607b444687838bb5f20",
+          "AMZ-98984ce510f6564345b822e41d1452522471ae469ca363bf450061880aadf0d5"
+        ],
+        "similarities": null,
+        "latency_ms": 0.3,
+        "metrics": {
+          "precision_at_k": 0.3333333333333333,
+          "recall_at_k": 1.0,
+          "reciprocal_rank_at_k": 1.0,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-06dd1695dfb061f9bbcd7619c0c59cf5225f56e8fbdcaa53dfd1d5d530174924",
+            "AMZ-98984ce510f6564345b822e41d1452522471ae469ca363bf450061880aadf0d5"
+          ]
+        }
+      },
+      {
+        "case_id": "Q11",
+        "question": "Which review mentions liking the rope chain?",
+        "product": "B0107QYW14",
+        "month": "2016-05",
+        "relevant_ids": [
+          "AMZ-72fb860f5c74ef649629a5f0a396a48502f5e2ef15d5d40cb767269d513ca26f"
+        ],
+        "returned_ids": [
+          "AMZ-72fb860f5c74ef649629a5f0a396a48502f5e2ef15d5d40cb767269d513ca26f"
+        ],
+        "similarities": null,
+        "latency_ms": 0.3,
+        "metrics": {
+          "precision_at_k": 0.16666666666666666,
+          "recall_at_k": 1.0,
+          "reciprocal_rank_at_k": 1.0,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": []
+        }
+      },
+      {
+        "case_id": "Q12",
+        "question": "Which reviews say this makes hair flatter, straighter, or less curly?",
+        "product": "B00YQ6X8EO",
+        "month": "2021-06",
+        "relevant_ids": [
+          "AMZ-a912ce622e6c58bc078813f255a98f5480580c395fb24362140e3d9d7756e4e9",
+          "AMZ-c30069a9a074c28feef349afe3e614afa8fc60a5f6b7f7d335bd7ce22750803a"
+        ],
+        "returned_ids": [
+          "AMZ-c30069a9a074c28feef349afe3e614afa8fc60a5f6b7f7d335bd7ce22750803a",
+          "AMZ-a4513f218e38cd9bbbc0e3b734ab4b0c0ed727580efae8f2a5f3f676349617f8",
+          "AMZ-0b72d5276ba586898e040300063055e02e00429cc1b20a9a3bb12d3ce8f50bb3",
+          "AMZ-a912ce622e6c58bc078813f255a98f5480580c395fb24362140e3d9d7756e4e9",
+          "AMZ-66eae4dc0bd1e8de5d874a6b705826cc56cfa2cbf8ad5622ee4e36cb46d0d373",
+          "AMZ-763fcc31d0627bd1c44087bc7a77ef344d1e154ccd0c2619343fb19b0d549601"
+        ],
+        "similarities": null,
+        "latency_ms": 0.34,
+        "metrics": {
+          "precision_at_k": 0.3333333333333333,
+          "recall_at_k": 1.0,
+          "reciprocal_rank_at_k": 1.0,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-a4513f218e38cd9bbbc0e3b734ab4b0c0ed727580efae8f2a5f3f676349617f8",
+            "AMZ-0b72d5276ba586898e040300063055e02e00429cc1b20a9a3bb12d3ce8f50bb3",
+            "AMZ-66eae4dc0bd1e8de5d874a6b705826cc56cfa2cbf8ad5622ee4e36cb46d0d373",
+            "AMZ-763fcc31d0627bd1c44087bc7a77ef344d1e154ccd0c2619343fb19b0d549601"
+          ]
+        }
+      },
+      {
+        "case_id": "Q13",
+        "question": "Which review reports an itchy scalp after using the product?",
+        "product": "B00YQ6X8EO",
+        "month": "2021-06",
+        "relevant_ids": [
+          "AMZ-a4513f218e38cd9bbbc0e3b734ab4b0c0ed727580efae8f2a5f3f676349617f8"
+        ],
+        "returned_ids": [
+          "AMZ-a4513f218e38cd9bbbc0e3b734ab4b0c0ed727580efae8f2a5f3f676349617f8",
+          "AMZ-a912ce622e6c58bc078813f255a98f5480580c395fb24362140e3d9d7756e4e9",
+          "AMZ-c30069a9a074c28feef349afe3e614afa8fc60a5f6b7f7d335bd7ce22750803a",
+          "AMZ-66eae4dc0bd1e8de5d874a6b705826cc56cfa2cbf8ad5622ee4e36cb46d0d373",
+          "AMZ-f628e422528002bed12112d4e2d53ebbb3a7f07c43e1f8ce91008bb1439baa91"
+        ],
+        "similarities": null,
+        "latency_ms": 0.33,
+        "metrics": {
+          "precision_at_k": 0.16666666666666666,
+          "recall_at_k": 1.0,
+          "reciprocal_rank_at_k": 1.0,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-a912ce622e6c58bc078813f255a98f5480580c395fb24362140e3d9d7756e4e9",
+            "AMZ-c30069a9a074c28feef349afe3e614afa8fc60a5f6b7f7d335bd7ce22750803a",
+            "AMZ-66eae4dc0bd1e8de5d874a6b705826cc56cfa2cbf8ad5622ee4e36cb46d0d373",
+            "AMZ-f628e422528002bed12112d4e2d53ebbb3a7f07c43e1f8ce91008bb1439baa91"
+          ]
+        }
+      },
+      {
+        "case_id": "Q14",
+        "question": "Which reviews say the fragrance fades or is weak after drying?",
+        "product": "B00YQ6X8EO",
+        "month": "2021-06",
+        "relevant_ids": [
+          "AMZ-29f36396a30ab0db65aa8259e592fc0cc3d1f8ad6764debf6ccf99925fde56a1",
+          "AMZ-66eae4dc0bd1e8de5d874a6b705826cc56cfa2cbf8ad5622ee4e36cb46d0d373"
+        ],
+        "returned_ids": [
+          "AMZ-a4513f218e38cd9bbbc0e3b734ab4b0c0ed727580efae8f2a5f3f676349617f8",
+          "AMZ-66eae4dc0bd1e8de5d874a6b705826cc56cfa2cbf8ad5622ee4e36cb46d0d373",
+          "AMZ-a912ce622e6c58bc078813f255a98f5480580c395fb24362140e3d9d7756e4e9",
+          "AMZ-f628e422528002bed12112d4e2d53ebbb3a7f07c43e1f8ce91008bb1439baa91"
+        ],
+        "similarities": null,
+        "latency_ms": 0.32,
+        "metrics": {
+          "precision_at_k": 0.16666666666666666,
+          "recall_at_k": 0.5,
+          "reciprocal_rank_at_k": 0.5,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [
+            "AMZ-29f36396a30ab0db65aa8259e592fc0cc3d1f8ad6764debf6ccf99925fde56a1"
+          ],
+          "irrelevant_returned_ids": [
+            "AMZ-a4513f218e38cd9bbbc0e3b734ab4b0c0ed727580efae8f2a5f3f676349617f8",
+            "AMZ-a912ce622e6c58bc078813f255a98f5480580c395fb24362140e3d9d7756e4e9",
+            "AMZ-f628e422528002bed12112d4e2d53ebbb3a7f07c43e1f8ce91008bb1439baa91"
+          ]
+        }
+      },
+      {
+        "case_id": "Q15",
+        "question": "Which review says the waves do not last long?",
+        "product": "B00YQ6X8EO",
+        "month": "2021-06",
+        "relevant_ids": [
+          "AMZ-763fcc31d0627bd1c44087bc7a77ef344d1e154ccd0c2619343fb19b0d549601"
+        ],
+        "returned_ids": [
+          "AMZ-763fcc31d0627bd1c44087bc7a77ef344d1e154ccd0c2619343fb19b0d549601",
+          "AMZ-a912ce622e6c58bc078813f255a98f5480580c395fb24362140e3d9d7756e4e9",
+          "AMZ-29f36396a30ab0db65aa8259e592fc0cc3d1f8ad6764debf6ccf99925fde56a1",
+          "AMZ-a4513f218e38cd9bbbc0e3b734ab4b0c0ed727580efae8f2a5f3f676349617f8",
+          "AMZ-f628e422528002bed12112d4e2d53ebbb3a7f07c43e1f8ce91008bb1439baa91"
+        ],
+        "similarities": null,
+        "latency_ms": 0.33,
+        "metrics": {
+          "precision_at_k": 0.16666666666666666,
+          "recall_at_k": 1.0,
+          "reciprocal_rank_at_k": 1.0,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-a912ce622e6c58bc078813f255a98f5480580c395fb24362140e3d9d7756e4e9",
+            "AMZ-29f36396a30ab0db65aa8259e592fc0cc3d1f8ad6764debf6ccf99925fde56a1",
+            "AMZ-a4513f218e38cd9bbbc0e3b734ab4b0c0ed727580efae8f2a5f3f676349617f8",
+            "AMZ-f628e422528002bed12112d4e2d53ebbb3a7f07c43e1f8ce91008bb1439baa91"
+          ]
+        }
+      },
+      {
+        "case_id": "Q16",
+        "question": "Which review mentions that the product cannot be returned?",
+        "product": "B00YQ6X8EO",
+        "month": "2021-06",
+        "relevant_ids": [
+          "AMZ-a4513f218e38cd9bbbc0e3b734ab4b0c0ed727580efae8f2a5f3f676349617f8"
+        ],
+        "returned_ids": [
+          "AMZ-c30069a9a074c28feef349afe3e614afa8fc60a5f6b7f7d335bd7ce22750803a",
+          "AMZ-a912ce622e6c58bc078813f255a98f5480580c395fb24362140e3d9d7756e4e9",
+          "AMZ-66eae4dc0bd1e8de5d874a6b705826cc56cfa2cbf8ad5622ee4e36cb46d0d373",
+          "AMZ-f628e422528002bed12112d4e2d53ebbb3a7f07c43e1f8ce91008bb1439baa91"
+        ],
+        "similarities": null,
+        "latency_ms": 0.33,
+        "metrics": {
+          "precision_at_k": 0.0,
+          "recall_at_k": 0.0,
+          "reciprocal_rank_at_k": 0.0,
+          "hit_at_k": 0,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [
+            "AMZ-a4513f218e38cd9bbbc0e3b734ab4b0c0ed727580efae8f2a5f3f676349617f8"
+          ],
+          "irrelevant_returned_ids": [
+            "AMZ-c30069a9a074c28feef349afe3e614afa8fc60a5f6b7f7d335bd7ce22750803a",
+            "AMZ-a912ce622e6c58bc078813f255a98f5480580c395fb24362140e3d9d7756e4e9",
+            "AMZ-66eae4dc0bd1e8de5d874a6b705826cc56cfa2cbf8ad5622ee4e36cb46d0d373",
+            "AMZ-f628e422528002bed12112d4e2d53ebbb3a7f07c43e1f8ce91008bb1439baa91"
+          ]
+        }
+      },
+      {
+        "case_id": "Q17",
+        "question": "Which reviews discuss soft hair or curls without stiffness or crunch?",
+        "product": "B00YQ6X8EO",
+        "month": "2021-06",
+        "relevant_ids": [
+          "AMZ-29f36396a30ab0db65aa8259e592fc0cc3d1f8ad6764debf6ccf99925fde56a1",
+          "AMZ-66eae4dc0bd1e8de5d874a6b705826cc56cfa2cbf8ad5622ee4e36cb46d0d373"
+        ],
+        "returned_ids": [
+          "AMZ-29f36396a30ab0db65aa8259e592fc0cc3d1f8ad6764debf6ccf99925fde56a1",
+          "AMZ-66eae4dc0bd1e8de5d874a6b705826cc56cfa2cbf8ad5622ee4e36cb46d0d373",
+          "AMZ-c30069a9a074c28feef349afe3e614afa8fc60a5f6b7f7d335bd7ce22750803a",
+          "AMZ-a4513f218e38cd9bbbc0e3b734ab4b0c0ed727580efae8f2a5f3f676349617f8",
+          "AMZ-a912ce622e6c58bc078813f255a98f5480580c395fb24362140e3d9d7756e4e9",
+          "AMZ-2f0c96cde5b4d3c90c667ba6ccc2f1e4f558530b6f64430b47f6a4a655fb8cfc"
+        ],
+        "similarities": null,
+        "latency_ms": 0.32,
+        "metrics": {
+          "precision_at_k": 0.3333333333333333,
+          "recall_at_k": 1.0,
+          "reciprocal_rank_at_k": 1.0,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-c30069a9a074c28feef349afe3e614afa8fc60a5f6b7f7d335bd7ce22750803a",
+            "AMZ-a4513f218e38cd9bbbc0e3b734ab4b0c0ed727580efae8f2a5f3f676349617f8",
+            "AMZ-a912ce622e6c58bc078813f255a98f5480580c395fb24362140e3d9d7756e4e9",
+            "AMZ-2f0c96cde5b4d3c90c667ba6ccc2f1e4f558530b6f64430b47f6a4a655fb8cfc"
+          ]
+        }
+      },
+      {
+        "case_id": "Q18",
+        "question": "Which reviews describe continuous spray or a long spray from one trigger pull?",
+        "product": "B07C533XCW",
+        "month": "2019-07",
+        "relevant_ids": [
+          "AMZ-914527a28b65b911747bfd5da9012a60999afefd0de5c738802fb67263811101",
+          "AMZ-c37cbbfdcedfa399dbdb538ff63e7804176bee523bff2553d8d3cd52dfd9bd84",
+          "AMZ-f8a2472339a73d6ae30400005a397b6dc37552491424502c6a78b487ebaa61c0"
+        ],
+        "returned_ids": [
+          "AMZ-914527a28b65b911747bfd5da9012a60999afefd0de5c738802fb67263811101",
+          "AMZ-c37cbbfdcedfa399dbdb538ff63e7804176bee523bff2553d8d3cd52dfd9bd84",
+          "AMZ-f8a2472339a73d6ae30400005a397b6dc37552491424502c6a78b487ebaa61c0",
+          "AMZ-1e011f905622d8d79b5e65932898814e71d5039ffb788fa23a03b0e0fd9ab391"
+        ],
+        "similarities": null,
+        "latency_ms": 0.3,
+        "metrics": {
+          "precision_at_k": 0.5,
+          "recall_at_k": 1.0,
+          "reciprocal_rank_at_k": 1.0,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-1e011f905622d8d79b5e65932898814e71d5039ffb788fa23a03b0e0fd9ab391"
+          ]
+        }
+      },
+      {
+        "case_id": "Q19",
+        "question": "Which review says stored water develops a musty smell?",
+        "product": "B07C533XCW",
+        "month": "2019-07",
+        "relevant_ids": [
+          "AMZ-1e011f905622d8d79b5e65932898814e71d5039ffb788fa23a03b0e0fd9ab391"
+        ],
+        "returned_ids": [
+          "AMZ-914527a28b65b911747bfd5da9012a60999afefd0de5c738802fb67263811101",
+          "AMZ-1e011f905622d8d79b5e65932898814e71d5039ffb788fa23a03b0e0fd9ab391"
+        ],
+        "similarities": null,
+        "latency_ms": 0.29,
+        "metrics": {
+          "precision_at_k": 0.16666666666666666,
+          "recall_at_k": 1.0,
+          "reciprocal_rank_at_k": 0.5,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-914527a28b65b911747bfd5da9012a60999afefd0de5c738802fb67263811101"
+          ]
+        }
+      },
+      {
+        "case_id": "Q20",
+        "question": "Which reviews describe a gentle or light mist?",
+        "product": "B07C533XCW",
+        "month": "2019-07",
+        "relevant_ids": [
+          "AMZ-914527a28b65b911747bfd5da9012a60999afefd0de5c738802fb67263811101",
+          "AMZ-6a34751921f5a5ec1bc1a619974014864ce64d0700ced9e42277f92769132720"
+        ],
+        "returned_ids": [
+          "AMZ-914527a28b65b911747bfd5da9012a60999afefd0de5c738802fb67263811101",
+          "AMZ-6a34751921f5a5ec1bc1a619974014864ce64d0700ced9e42277f92769132720",
+          "AMZ-1e011f905622d8d79b5e65932898814e71d5039ffb788fa23a03b0e0fd9ab391"
+        ],
+        "similarities": null,
+        "latency_ms": 0.28,
+        "metrics": {
+          "precision_at_k": 0.3333333333333333,
+          "recall_at_k": 1.0,
+          "reciprocal_rank_at_k": 1.0,
+          "hit_at_k": 1,
+          "unsupported_return": null,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-1e011f905622d8d79b5e65932898814e71d5039ffb788fa23a03b0e0fd9ab391"
+          ]
+        }
+      },
+      {
+        "case_id": "Q21",
+        "question": "Which reviews report a shattered glass bottle on delivery?",
+        "product": "B00YQ6X8EO",
+        "month": "2021-06",
+        "relevant_ids": [],
+        "returned_ids": [
+          "AMZ-66eae4dc0bd1e8de5d874a6b705826cc56cfa2cbf8ad5622ee4e36cb46d0d373",
+          "AMZ-a912ce622e6c58bc078813f255a98f5480580c395fb24362140e3d9d7756e4e9",
+          "AMZ-2f0c96cde5b4d3c90c667ba6ccc2f1e4f558530b6f64430b47f6a4a655fb8cfc"
+        ],
+        "similarities": null,
+        "latency_ms": 0.32,
+        "metrics": {
+          "precision_at_k": null,
+          "recall_at_k": null,
+          "reciprocal_rank_at_k": null,
+          "hit_at_k": null,
+          "unsupported_return": true,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-66eae4dc0bd1e8de5d874a6b705826cc56cfa2cbf8ad5622ee4e36cb46d0d373",
+            "AMZ-a912ce622e6c58bc078813f255a98f5480580c395fb24362140e3d9d7756e4e9",
+            "AMZ-2f0c96cde5b4d3c90c667ba6ccc2f1e4f558530b6f64430b47f6a4a655fb8cfc"
+          ]
+        }
+      },
+      {
+        "case_id": "Q22",
+        "question": "Which reviews report a battery catching fire?",
+        "product": "B07C533XCW",
+        "month": "2019-07",
+        "relevant_ids": [],
+        "returned_ids": [
+          "AMZ-914527a28b65b911747bfd5da9012a60999afefd0de5c738802fb67263811101"
+        ],
+        "similarities": null,
+        "latency_ms": 0.27,
+        "metrics": {
+          "precision_at_k": null,
+          "recall_at_k": null,
+          "reciprocal_rank_at_k": null,
+          "hit_at_k": null,
+          "unsupported_return": true,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-914527a28b65b911747bfd5da9012a60999afefd0de5c738802fb67263811101"
+          ]
+        }
+      },
+      {
+        "case_id": "Q23",
+        "question": "Which reviews prove that the necklace cures eczema?",
+        "product": "B0107QYW14",
+        "month": "2016-04",
+        "relevant_ids": [],
+        "returned_ids": [
+          "AMZ-64446056e10e70892a6ff0cf2f8f21d0729f5e54e4470b1561a835dc8cb23605",
+          "AMZ-778ee96695eccb0afa524b0dddb1615dd4a4acf2476cd13d8a285f93b7d8d04d",
+          "AMZ-2fa2b421b1cdd827a06a9741d8c57f2df7e072cfb6640cb8007c32a82ec81a11",
+          "AMZ-b7b338502400e2642e5a597238a3d74d13758e6551962ee684c12fa09a1391b9"
+        ],
+        "similarities": null,
+        "latency_ms": 0.29,
+        "metrics": {
+          "precision_at_k": null,
+          "recall_at_k": null,
+          "reciprocal_rank_at_k": null,
+          "hit_at_k": null,
+          "unsupported_return": true,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-64446056e10e70892a6ff0cf2f8f21d0729f5e54e4470b1561a835dc8cb23605",
+            "AMZ-778ee96695eccb0afa524b0dddb1615dd4a4acf2476cd13d8a285f93b7d8d04d",
+            "AMZ-2fa2b421b1cdd827a06a9741d8c57f2df7e072cfb6640cb8007c32a82ec81a11",
+            "AMZ-b7b338502400e2642e5a597238a3d74d13758e6551962ee684c12fa09a1391b9"
+          ]
+        }
+      },
+      {
+        "case_id": "Q24",
+        "question": "Which reviews report an unauthorized credit card charge?",
+        "product": "B0107QYW14",
+        "month": "2016-05",
+        "relevant_ids": [],
+        "returned_ids": [
+          "AMZ-b4bc8f4946e904c5960c91dbebb02586769800aab445cfd78d40d231052f9fae"
+        ],
+        "similarities": null,
+        "latency_ms": 0.29,
+        "metrics": {
+          "precision_at_k": null,
+          "recall_at_k": null,
+          "reciprocal_rank_at_k": null,
+          "hit_at_k": null,
+          "unsupported_return": true,
+          "out_of_scope_ids": [],
+          "duplicate_count": 0,
+          "missing_relevant_ids": [],
+          "irrelevant_returned_ids": [
+            "AMZ-b4bc8f4946e904c5960c91dbebb02586769800aab445cfd78d40d231052f9fae"
+          ]
+        }
+      }
+    ]
+  }
+}

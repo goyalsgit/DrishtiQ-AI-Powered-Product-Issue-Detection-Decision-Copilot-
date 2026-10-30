@@ -1,186 +1,289 @@
-import json
+"""DrishtiQ dashboard.
+
+Tabs:  Overview | Ask reviews | Reviews | Data | Project & quality
+Every number is read from SQLite on each page load (no caching), so reviews added
+by CSV upload or database sync appear as soon as the page refreshes.
+"""
+from datetime import date
+import os
+
 import pandas as pd
 import streamlit as st
-from src.analytics import topics, retrieve, save_decision, history
-from src.database import ReviewStore
-from src.recommendations import validate_recommendation
-from pathlib import Path
 
-st.set_page_config(page_title='DristiQ | Customer Intelligence', page_icon='◈', layout='wide')
-st.markdown('''<style>.stApp{background:#0b1120;color:#e5edf9}h1{letter-spacing:-2px}div[data-testid="stMetric"]{background:#152238;padding:20px;border-radius:14px;border:1px solid #263850}</style>''', unsafe_allow_html=True)
-st.caption('DRISTIQ / CUSTOMER FEEDBACK INTELLIGENCE')
-st.title('Understand what your customers are saying.')
-st.write('Ask a question, inspect the evidence, and decide what to investigate next.')
+from src.dashboard_ai import get_search, render_ai_settings, render_investigation
+from src.dashboard_project import render_project_status
+from src.database import ReviewStore
+
+PUBLIC_DEMO = os.getenv('DRISHTIQ_PUBLIC_DEMO') == '1'
+CSV_HELP = 'Columns: review_id, product, date (YYYY-MM-DD), rating (1-5), text.'
+
+st.set_page_config(page_title='DrishtiQ', page_icon='🔎', layout='wide')
 store = ReviewStore()
-# Seed the labelled demo only if there are no saved datasets yet.
-if store.datasets().empty:
-    store.ingest(pd.read_csv(Path(__file__).parent / 'data/sample_reviews.csv'),
-                 'Fictional learning dataset', is_demo=True)
-with st.sidebar:
-    st.header('◈ DristiQ')
-    with st.form('import_reviews'):
-        upload = st.file_uploader('Upload customer reviews', type='csv')
-        st.caption('Columns: review_id, product, date, rating, text. Dates: YYYY-MM-DD. Use a consistent product identifier in product.')
-        import_clicked = st.form_submit_button('Validate and save dataset')
-    if import_clicked:
-        if upload is None:
-            st.error('Choose a CSV first.')
-        else:
+
+
+def read_upload(upload):
+    return pd.read_csv(upload, dtype={'review_id': str, 'product': str})
+
+
+# ---------- First run: empty database ----------
+datasets = store.datasets()
+if datasets.empty:
+    st.title('DrishtiQ')
+    st.info('The review database is empty. Import a CSV to start. No demo data is added automatically.')
+    with st.form('initial_import'):
+        upload = st.file_uploader('Import reviews (CSV)', type='csv', help=CSV_HELP)
+        if st.form_submit_button('Save to database') and upload is not None:
             try:
-                dataset_id, removed = store.ingest(
-                    pd.read_csv(upload, dtype={'review_id': str, 'product': str}), upload.name)
-                st.session_state['dataset_choice'] = dataset_id
-                st.success(f'Saved dataset. Excluded {removed} invalid or duplicate rows.')
+                store.ingest(read_upload(upload), upload.name)
+                st.rerun()
             except (ValueError, pd.errors.ParserError, UnicodeDecodeError) as exc:
                 st.error(str(exc))
-    datasets = store.datasets().set_index('id')
-    dataset_id = st.selectbox('Saved dataset', datasets.index.tolist(), key='dataset_choice',
-        format_func=lambda key: f'{datasets.loc[key, "name"]} · {key[:8]}')
-    info = datasets.loc[dataset_id]
-    st.download_button('Download sample CSV', (Path(__file__).parent / 'data/sample_reviews.csv').read_bytes(), 'sample_reviews.csv', 'text/csv')
-df = store.read(dataset_id)
-if info['is_demo']:
-    st.info('DEMO DATA • Fictional reviews. All insights below describe this synthetic dataset.')
-else:
-    st.caption(f'Saved source: {info["name"]} · {len(df):,} validated reviews. Uploaded data provenance is supplied by the uploader.')
-    provenance_path = Path(__file__).parent / 'data/amazon_beauty_provenance.json'
-    if provenance_path.exists():
-        provenance = json.loads(provenance_path.read_text())
-        if provenance.get('dataset_id') == dataset_id:
-            st.info('PUBLIC HISTORICAL SAMPLE • These reviews are not a random or complete sample. Metrics describe the saved subset only. Product labels are original Amazon IDs.')
-            with st.expander('Data source and sampling method'):
-                st.write(provenance['sampling'])
-                st.markdown(f'[Original dataset]({provenance["source"]})')
-                st.caption(f'Source revision: {provenance["revision"]}')
+    st.stop()
+
+
+# ---------- Sidebar: dataset and investigation scope ----------
 with st.sidebar:
-    product = st.selectbox('Product', sorted(df['product'].unique()))
-    selected = df[df['product'].eq(product)]
-    months = sorted(selected['month'].unique())
-    current = st.selectbox('Analysis month', months, index=len(months)-1)
-    earlier = [m for m in months if m < current]
-    baseline = st.selectbox('Compare with', earlier, index=len(earlier)-1) if earlier else None
-    minimum = st.number_input('Minimum reviews per period', 5, 500, 20)
-    threshold = st.slider('Alert threshold (percentage points)', 1, 50, 10)
-    st.caption('Low rating = 1 or 2 stars. Topic tags use keywords, not AI sentiment analysis.')
-now = selected[selected['month'].eq(current)]
-before = selected[selected['month'].eq(baseline)]
-n, avg, neg, share = store.metrics(dataset_id, product, current)
-pn, _, _, previous = store.metrics(dataset_id, product, baseline)
-delta = share - previous if previous is not None else None
-cols = st.columns(4)
-cols[0].metric('Reviews analysed', n)
-cols[1].metric('Average rating', f'{avg:.2f} / 5')
-cols[2].metric('Low-rating share', f'{share:.1f}%', f'{delta:+.1f} pp' if delta is not None else None, delta_color='inverse')
-cols[3].metric('Low-rating reviews', neg)
-investigation, overview, evidence, approval, learn = st.tabs(
-    ['AI Investigation', 'Overview', 'Review evidence', 'Decisions', 'How it works'])
-with investigation:
-    from src.dashboard_ai import render_investigation
-    render_investigation(store, dataset_id, product, current, baseline, int(minimum))
-with overview:
-    st.subheader(f'{product} · {current}')
-    if delta is None:
-        st.info('Choose a later month to compare with an earlier period.')
-    elif min(n, pn) < minimum:
-        st.warning(f'Insufficient sample: {pn} baseline and {n} current reviews. Need {minimum} in each period.')
-    elif delta >= threshold:
-        st.warning(f'Low-rating alert: +{delta:.1f} percentage points ({previous:.1f}% → {share:.1f}%). This is a rule-based alert, not a statistical significance test.')
+    st.header('DrishtiQ')
+    names = datasets.set_index('id')['name']
+    dataset_id = st.selectbox('Dataset', datasets['id'].tolist(), key='dataset_choice',
+                              format_func=lambda key: names[key])
+    catalog = store.catalog(dataset_id)
+    if catalog.empty:
+        st.warning('This dataset has no reviews yet. Add some in the Data tab.')
+        product = current = baseline = None
     else:
-        st.success('The increase does not meet the selected alert threshold.')
-    left, right = st.columns(2)
-    with left:
-        st.write('Monthly low-rating share (%)')
-        st.line_chart(selected.groupby('month')['negative'].mean().mul(100))
-    tagged = topics(now)
-    with right:
-        st.write('Keyword-tagged complaints in low-rating reviews')
-        st.bar_chart(pd.Series({k: len(v) for k, v in tagged.items()}, name='Mentions'))
-    st.caption('One review can match several topics. Keyword matches can miss nuance or negation. Review the evidence before acting.')
-with evidence:
-    st.subheader('Find the words behind the numbers')
-    mode = st.radio('Search method', ['Keyword', 'Semantic'], horizontal=True)
-    query = st.text_input('Search reviews', placeholder='Try: liquid spilled during shipping')
-    if mode == 'Keyword':
-        matches = retrieve(now, query) if query.strip() else now
-        st.dataframe(matches[['review_id', 'date', 'rating', 'text']], width='stretch', hide_index=True)
-    else:
-        st.caption('Local semantic search within this dataset, product, and month. Similarity is not confidence; results may be irrelevant. English baseline model.')
-        try:
-            from src.embeddings import ReviewSearch, load_model
+        st.subheader('Investigation scope')
+        # None = "All products": questions can compare and cover every product.
+        product = st.selectbox('Product', [None] + sorted(catalog['product'].unique()), index=1,
+                               format_func=lambda p: '🌐 All products' if p is None else p)
+        product_rows = (catalog if product is None else catalog[catalog['product'].eq(product)])
+        product_rows = product_rows.groupby('month', as_index=False)['total_reviews'].sum()
+        months = product_rows['month'].tolist()
+        counts = dict(zip(months, product_rows['total_reviews']))
+        total = int(product_rows['total_reviews'].sum())
+        # "All months" (None) searches the product's whole history.
+        current = st.selectbox(
+            'Analysis month', [None] + months, index=len(months),
+            format_func=lambda m: f'All months ({total} reviews)' if m is None
+            else f'{m} ({counts[m]} reviews)')
+        # Month comparison is per product; not offered for All products.
+        earlier = [m for m in months if current is not None and m < current and product is not None]
+        compare = st.checkbox('Compare months', key='ai_compare', disabled=not earlier)
+        baseline = (st.selectbox('Compare with', earlier, index=len(earlier) - 1)
+                    if compare and earlier else None)
+    st.divider()
+    render_ai_settings()
+    with st.expander('Analysis settings'):
+        minimum = int(st.number_input('Minimum reviews per period', 1, 500, 20))
+        st.caption('A sample-size rule, not a statistical significance test.')
 
-            @st.cache_resource
-            def semantic_search():
-                return ReviewSearch(load_model())
 
-            search = semantic_search()
-            if not search.ready(dataset_id):
-                st.info('Prepare this dataset for semantic search once. Larger datasets take longer.')
-                if st.button('Build semantic index'):
-                    with st.spinner('Embedding review passages locally…'):
-                        passages = search.build(store, dataset_id)
-                    st.success(f'Saved {passages:,} searchable passages.')
-            if search.ready(dataset_id):
-                st.caption('Index ready. Full source reviews remain in SQLite.')
-                if query.strip():
-                    with st.spinner('Finding relevant reviews…'):
-                        hits = search.search(store, dataset_id, product, current, query)
-                    if hits:
-                        st.dataframe(pd.DataFrame(hits), width='stretch', hide_index=True)
+# ---------- Header ----------
+overall = store.summary(dataset_id)
+left, right = st.columns([4, 1])
+left.title('DrishtiQ')
+left.caption('Customer review intelligence: exact SQL statistics plus review evidence. '
+             f'Dataset: {names[dataset_id]}')
+if right.button('🔄 Refresh data', width='stretch'):
+    st.rerun()
+right.caption(f"Latest review: {overall['last_date'] or '—'}")
+
+
+def filter_bar(prefix):
+    """Shared filters. Returns keyword arguments for the ReviewStore analytics methods."""
+    products = sorted(catalog['product'].unique()) if not catalog.empty else []
+    first = date.fromisoformat(overall['first_date'][:10]) if overall['first_date'] else date.today()
+    last = date.fromisoformat(overall['last_date'][:10]) if overall['last_date'] else date.today()
+    c1, c2, c3 = st.columns([2, 2, 1.4])
+    chosen = c1.multiselect('Products', products, key=f'{prefix}_products',
+                            placeholder='All products')
+    period = c2.date_input('Date range', (first, last), min_value=first, max_value=last,
+                           key=f'{prefix}_dates')
+    ratings = c3.multiselect('Stars', [1, 2, 3, 4, 5], key=f'{prefix}_stars', placeholder='All')
+    start, end = (period if isinstance(period, tuple) and len(period) == 2 else (first, last))
+    return {'products': chosen or None, 'start': start.isoformat(),
+            'end': end.isoformat() + 'T23:59:59', 'ratings': ratings or None}
+
+
+def kpi_row(stats):
+    cols = st.columns(4)
+    cols[0].metric('Reviews', f"{stats['reviews']:,}")
+    cols[1].metric('Products', stats['products'])
+    cols[2].metric('Average rating',
+                   f"{stats['average_rating']:.2f} ★" if stats['average_rating'] else '—')
+    share = stats['low_rating_share_percent']
+    cols[3].metric('Low-rating share', f'{share:.1f}%' if share is not None else '—',
+                   help='Share of 1-2 star reviews. Not a count of a specific complaint.')
+
+
+def render_company_sync(search):
+    from src import company_db
+    with st.container(border=True):
+        st.markdown('**Company database sync**')
+        st.caption(f'Source: {company_db.COMPANY_DB.name} (table customer_reviews). Only new rows '
+                   'are copied into "Company reviews (live)" and only those are indexed.')
+        if not company_db.COMPANY_DB.exists():
+            if st.button('Create demo company database (1,500 real reviews)'):
+                with st.spinner('Creating…'):
+                    st.success(f'{company_db.create():,} reviews written. Now click Sync now.')
+        else:
+            if st.button('🔄 Sync now', type='primary'):
+                with st.spinner('Copying new rows and indexing them…'):
+                    live_id, result = company_db.sync(store, search)
+                st.success(f"Fetched {result['fetched']:,} new rows, added {result['added']:,} reviews, "
+                           f"indexed {result['passages_indexed']:,} passages.")
+            with st.form('add_company_review'):
+                st.markdown('Simulate a customer posting a review in the company system:')
+                sku = st.selectbox('Company product', company_db.products())
+                stars = st.slider('Stars', 1, 5, 2)
+                body = st.text_area('Review text')
+                if st.form_submit_button('Post review to company database'):
+                    if body.strip():
+                        row = company_db.add_review(sku, stars, body.strip())
+                        st.success(f'Posted as row {row}. It is NOT in DrishtiQ until you click Sync now.')
                     else:
-                        st.info('No reviews found within the selected scope.')
-        except (ImportError, OSError, ValueError, RuntimeError) as exc:
-            st.error(f'Semantic search unavailable: {exc}')
-            st.caption('Setup: install requirements-chroma.txt and run lesson 04 once to download the model.')
-    st.download_button('Export selected reviews', now.to_csv(index=False), 'dristiq_reviews.csv', 'text/csv')
-with approval:
-    st.subheader('Review a proposed action')
-    topic = st.selectbox('Complaint to investigate', list(tagged))
-    supporting = tagged[topic]
-    if supporting.empty:
-        st.info('No low-rating reviews matched this topic in this period.')
+                        st.warning('Write some review text first.')
+
+
+overview, ask, reviews_tab, data_tab, project = st.tabs(
+    ['Overview', 'Ask reviews', 'Reviews', 'Data', 'Project & quality'])
+
+
+# ---------- Overview: all products at a glance ----------
+with overview:
+    if catalog.empty:
+        st.info('No reviews yet.')
     else:
-        action = f'Request a {topic.lower()} review for {product} ({current})'
-        proposal = {
-            'product': product,
-            'issue': f'Low-rating reviews contain keywords associated with {topic.lower()}.',
-            'evidence_ids': supporting['review_id'].tolist(),
-            'recommended_action': action,
-        }
-        try:
-            summary = validate_recommendation(proposal, supporting['review_id'].tolist())
-        except ValueError as exc:
-            st.error(f'Recommendation validation failed: {exc}')
-            st.stop()
-        st.write(action)
-        with st.expander('Inspect validated recommendation'):
-            st.json(summary.model_dump())
-        st.caption('Rule-based suggestion. Saving a decision records it locally; it does not send messages or execute an external action.')
-        st.dataframe(supporting[['review_id', 'rating', 'text']], hide_index=True, width='stretch')
-        reviewer = st.text_input('Reviewer name')
-        decision = st.radio('Decision', ['Approve', 'Reject'], horizontal=True)
-        context = {'dataset': dataset_id, 'product': product, 'month': current, 'baseline': baseline,
-                   'topic': topic, 'evidence': supporting['review_id'].tolist()}
-        if st.button('Save decision', type='primary', disabled=not reviewer.strip()):
-            validate_recommendation(proposal, supporting['review_id'].tolist())
-            save_decision(context, action, decision, reviewer.strip())
-            st.success('Decision recorded. An existing decision for this exact proposal is preserved.')
-    st.subheader('Persistent decision history')
-    st.dataframe(history(dataset_id), width='stretch', hide_index=True)
-with learn:
-    st.markdown('''**1. Pandas cleans the CSV.** Each row is one review. We reject invalid ratings and missing fields.
+        filters = filter_bar('ov')
+        stats = store.summary(dataset_id, **filters)
+        kpi_row(stats)
+        if stats['reviews'] == 0:
+            st.info('No reviews match these filters.')
+        else:
+            trend = store.monthly_trend(dataset_id, **filters).set_index('month')
+            c1, c2 = st.columns([2, 1])
+            with c1.container(border=True):
+                st.markdown('**Low-rating share by month (%)**')
+                st.line_chart(trend['low_rating_share_percent'], height=240)
+                st.caption('Months with few reviews swing a lot; check review counts below.')
+            with c2.container(border=True):
+                st.markdown('**Star rating distribution**')
+                dist = store.rating_distribution(dataset_id, **filters)
+                st.bar_chart(dist.set_index('rating')['reviews'], height=240)
+            with st.container(border=True):
+                st.markdown('**Reviews per month**')
+                st.bar_chart(trend['reviews'], height=180)
+            st.subheader('Products ranked by low-rating share')
+            table = store.product_table(dataset_id, **filters)
+            table['note'] = table['reviews'].map(
+                lambda n: f'small sample (<{minimum})' if n < minimum else '')
+            st.dataframe(table, hide_index=True, width='stretch', column_config={
+                'product': 'Product',
+                'reviews': st.column_config.NumberColumn('Reviews'),
+                'average_rating': st.column_config.NumberColumn('Avg ★', format='%.2f'),
+                'low_rating_reviews': st.column_config.NumberColumn('1-2 ★ reviews'),
+                'low_rating_share_percent': st.column_config.ProgressColumn(
+                    'Low-rating share', format='%.1f%%', min_value=0, max_value=100),
+                'latest_review': 'Latest review', 'note': 'Note'})
+            st.caption('Ask DrishtiQ about a product: choose it in the sidebar, then open Ask reviews.')
 
-**2. SQLite stores immutable dataset snapshots.** Reimporting the same validated data does not duplicate it. SQL calculates metrics directly from the saved reviews.
 
-**3. Period comparison detects a change.** We require enough reviews before raising a threshold alert. A change alone does not prove its cause.
+# ---------- Ask reviews: AI investigation for one product ----------
+with ask:
+    if catalog.empty:
+        st.info('Add reviews first.')
+    else:
+        n, avg, low, share = store.metrics(dataset_id, product, current)
+        period = current or 'all months'
+        st.caption(f'Scope: {product or "all products"} · {period}'
+                   + (f' vs {baseline}' if baseline else ''))
+        cols = st.columns(3)
+        cols[0].metric('Reviews in scope', n)
+        cols[1].metric('Average rating', f'{avg:.2f} ★' if avg is not None else '—')
+        cols[2].metric('Low-rating share', f'{share:.1f}%' if share is not None else '—')
+        if n < minimum:
+            st.warning(f'Only {n} reviews in {period}. Answers will be thin. '
+                       'Choose "All months" in the sidebar to search the whole product history.')
+        render_investigation(store, dataset_id, product, current, baseline, minimum)
 
-**4. Semantic search retrieves evidence.** MiniLM embeds review passages; Chroma saves and searches them. Dataset, product, and month filters keep results in scope. Complaint charts still use keyword tags, not AI classification.
 
-**5. SQLite saves human decisions.** The decision includes dataset identity and supporting review IDs, so it survives an app restart.
+# ---------- Reviews: filter, read and export original reviews ----------
+with reviews_tab:
+    if catalog.empty:
+        st.info('No reviews yet.')
+    else:
+        filters = filter_bar('rv')
+        filters['text'] = st.text_input('Contains text', key='rv_text',
+                                        placeholder='e.g. leak, smell, broken')
+        total = store.summary(dataset_id, **filters)['reviews']
+        pages = max(1, (total + 24) // 25)
+        c1, c2 = st.columns([1, 3])
+        page = c1.number_input('Page', 1, pages, 1, key='rv_page')
+        c2.caption(f'{total:,} matching reviews · page {page} of {pages} · 25 per page')
+        st.dataframe(store.filtered_page(dataset_id, offset=(int(page) - 1) * 25, **filters),
+                     hide_index=True, width='stretch', column_config={
+                         'date': 'Date', 'product': 'Product',
+                         'rating': st.column_config.NumberColumn('★'),
+                         'text': st.column_config.TextColumn('Review', width='large'),
+                         'review_id': 'Review ID'})
+        st.download_button('Download matching reviews (CSV, max 50,000)',
+                           store.filtered_export(dataset_id, **filters).to_csv(index=False),
+                           file_name='drishtiq_reviews.csv', mime='text/csv')
 
-**6. AI Investigation connects Gemini to the tools.** Enter a key and ask a question.
-LangGraph runs the model/tool loop, SQL supplies metrics, and MiniLM + Chroma find
-review evidence. The report, evidence, and tool activity appear together.
 
-**What is still pending:** structured AI report validation, stronger evidence
-relevance checks, and persistent approval of AI investigations. The Decisions tab
-currently records rule-based proposals; it does not approve an AI report.''')
+# ---------- Data: storage, imports and search index ----------
+with data_tab:
+    st.write('The application reads the saved SQLite database. You do not need to upload a CSV each time.')
+    c1, c2, c3 = st.columns(3)
+    c1.metric('Saved reviews', f"{overall['reviews']:,}")
+    c2.metric('Products', overall['products'])
+    c3.metric('Dataset type', 'Live (grows)' if dataset_id.startswith('live-') else 'Snapshot (fixed)')
+    st.caption(f'SQLite file: {store.path}')
+
+    with st.container(border=True):
+        st.markdown('**Review search index**')
+        search = get_search()
+        ready = search.ready(dataset_id)
+        st.write('✅ Ready' if ready else '⚠️ Not prepared for this dataset')
+        st.caption('MiniLM turns review passages into vectors; Chroma stores them. Runs locally, no Gemini call.')
+        if not PUBLIC_DEMO and st.button('Prepare review search', key='ai_prepare', disabled=ready):
+            with st.spinner('Indexing reviews…'):
+                st.success(f'{search.build(store, dataset_id):,} passages ready.')
+
+    if not PUBLIC_DEMO:
+        with st.container(border=True):
+            st.markdown('**Add reviews from a CSV file**')
+            st.caption(CSV_HELP)
+            with st.form('additional_import'):
+                upload = st.file_uploader('CSV file', type='csv')
+                mode = st.radio('Save as', [
+                    'Add to a live dataset (new reviews are appended and indexed)',
+                    'New snapshot (a fixed copy that never changes)'])
+                live_name = st.text_input('Live dataset name', value='Company reviews (live)')
+                submitted = st.form_submit_button('Save to database', type='primary')
+            if submitted:
+                if upload is None:
+                    st.warning('Choose a file first.')
+                else:
+                    try:
+                        frame = read_upload(upload)
+                        if mode.startswith('Add'):
+                            target = store.create_live_dataset(live_name.strip() or 'Company reviews (live)')
+                            added, removed = store.append(target, frame)
+                            indexed = search.add_reviews(store, target, added) if added else 0
+                            st.success(f'Added {len(added):,} new reviews ({indexed:,} passages indexed). '
+                                       f'Skipped {removed} invalid rows; already-saved reviews are ignored.')
+                        else:
+                            _, removed = store.ingest(frame, upload.name)
+                            st.success(f'Snapshot saved. Excluded {removed} invalid or duplicate rows.')
+                        st.caption('Select the dataset in the sidebar (refresh if it is new).')
+                    except (ValueError, pd.errors.ParserError, UnicodeDecodeError) as exc:
+                        st.error(str(exc))
+
+    # The demo company database is built from 1429_1.csv, which is not on the public host.
+    if not PUBLIC_DEMO:
+        render_company_sync(search)
+
+
+with project:
+    render_project_status()

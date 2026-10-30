@@ -19,8 +19,13 @@ def main():
     # Pin this download to a specific upstream revision for reproducibility.
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--revision', default='2b6d039ed471f2ba5fd2acb718bf33b0a7e5598e')
-    revision = parser.parse_args().revision
-    url = f'{SOURCE}/resolve/{revision}/raw/review_categories/All_Beauty.jsonl'
+    parser.add_argument('--category', default='All_Beauty',
+                        help='Amazon Reviews 2023 category, e.g. Health_and_Personal_Care')
+    args = parser.parse_args()
+    revision, category = args.revision, args.category
+    url = f'{SOURCE}/resolve/{revision}/raw/review_categories/{category}.jsonl'
+    # The original beauty sample keeps its file names; other categories get their own.
+    stem = 'amazon_beauty' if category == 'All_Beauty' else f'amazon_{category.lower()}'
     rows = []
     scanned = 0
     with requests.get(url, stream=True, timeout=(30, 90)) as response:
@@ -46,10 +51,11 @@ def main():
     top = df['product'].value_counts().head(8).index
     # Retain all sampled reviews for the selected products, regardless of rating/date.
     df = df[df['product'].isin(top)].sort_values(['product', 'date', 'review_id'])
-    path = ROOT / 'data/amazon_beauty_sample.csv'
+    path = ROOT / f'data/{stem}_sample.csv'
     df.to_csv(path, index=False)
     store = ReviewStore()
-    dataset, excluded = store.ingest(df, 'Amazon All Beauty • public convenience sample')
+    label = category.replace('_', ' ')
+    dataset, excluded = store.ingest(df, f'Amazon {label} • public convenience sample')
     provenance = {
         'source': SOURCE, 'project_page': 'https://amazon-reviews-2023.github.io/',
         'revision': revision, 'download_url': url,
@@ -61,7 +67,7 @@ def main():
         'dates': 'Original timestamps converted from Unix milliseconds to UTC dates.',
         'limits': 'Incomplete historical sample. Metrics describe this saved sample only, not all Amazon customers or a brand. No human-verified topic labels.',
     }
-    (ROOT / 'data/amazon_beauty_provenance.json').write_text(json.dumps(provenance, indent=2))
+    (ROOT / f'data/{stem}_provenance.json').write_text(json.dumps(provenance, indent=2))
     print(json.dumps({k: provenance[k] for k in ['source_rows_scanned', 'retained_rows', 'dataset_id']}, indent=2))
     print(df.groupby('product').size().to_string())
 

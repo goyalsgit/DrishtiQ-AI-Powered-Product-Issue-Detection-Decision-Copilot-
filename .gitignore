@@ -12,3 +12,7 @@ data/chroma_lesson/
 data/chroma_reviews/
 
 data/amazon_beauty_sample.csv
+
+# Downloaded review text from other categories (reproducible with the importer)
+data/amazon_*_sample.csv
+1429_1.csv

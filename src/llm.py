@@ -17,5 +17,5 @@ def make_llm(model_name=None, *, api_key=None):
         vertexai=False,
         timeout=60,
         max_retries=1,
-        max_tokens=2048,
+        max_tokens=4096,   # room for a detailed, multi-theme report
     )

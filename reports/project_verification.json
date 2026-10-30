@@ -1,0 +1,24 @@
+{
+  "created_utc": "2026-10-20T20:39:57.391950+00:00",
+  "source_sha256": "63cfa505a8eca2cab5ea3e83bfdec98322e8b453204bc165b6388ad8e3e007c1",
+  "source_unchanged_during_run": true,
+  "command": ".venv-agent/bin/python -m scripts.verify_project",
+  "python": "3.12.13",
+  "packages": {
+    "streamlit": "1.50.0",
+    "langchain": "1.4.6",
+    "langgraph": "1.2.16",
+    "chromadb": "0.6.3",
+    "sentence-transformers": "3.4.1"
+  },
+  "tests_run": 62,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "passed": true,
+  "duration_seconds": 1.748,
+  "limitations": [
+    "Offline tests use scripted models; no live Gemini quality score.",
+    "Passing tests verifies checked behavior, not production readiness or root causes."
+  ]
+}

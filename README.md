@@ -1,11 +1,12 @@
-# DristiQ — Customer Feedback Intelligence
+# DrishtiQ — Customer Feedback Intelligence
 
-A local application for importing customer reviews, calculating SQL metrics,
-retrieving review evidence by meaning, and recording human decisions.
+A local application for investigating customer-reported product problems using
+SQL metrics, review evidence and Gemini-generated draft explanations.
 
-The dashboard connects persistent SQLite storage and local MiniLM/Chroma
-retrieval. A separate learning CLI now implements Gemini chat, fixed RAG,
-and a bounded LangGraph tool loop. The dashboard does not yet use these modules.
+The dashboard connects persistent SQLite storage, local MiniLM/Chroma retrieval,
+and a bounded Gemini/LangGraph tool loop. Open **Ask reviews** to enter a
+question, then inspect the report, original evidence and SQL results. Connection
+settings are in the sidebar. The learning CLI also supports plain chat and fixed RAG.
 
 See [Lesson 10: chat, RAG, and agents](docs/learning/10-agent-lab.md) for commands
 and a step-by-step explanation. The offline mode executes real retrieval using
@@ -21,22 +22,43 @@ See the [remaining implementation sequence](docs/learning/project-next-steps.md)
 The current workspace is already installed and has the model cached. Run:
 
 ```bash
-.venv/bin/streamlit run app.py --server.address 127.0.0.1 --browser.gatherUsageStats false
+.venv-agent/bin/python -m streamlit run app.py --server.address 127.0.0.1 --browser.gatherUsageStats false
 ```
 
 Open http://127.0.0.1:8501. For a fresh installation:
 
 ```bash
-python3 -m venv .venv
-.venv/bin/python -m pip install -r requirements-app.txt
-.venv/bin/python -m lessons.04_semantic_search
-.venv/bin/python -m scripts.import_public_reviews
+python3.12 -m venv .venv-agent
+.venv-agent/bin/python -m pip install -r requirements-dashboard.txt
+.venv-agent/bin/python -m lessons.04_semantic_search
+.venv-agent/bin/python -m scripts.import_public_reviews
 ```
 
-Dependencies are pinned around this workspace's Python 3.9 learning environment.
-Migration to a supported newer Python and a reviewed dependency set is required
-before treating it as a production deployment. This environment emits a LibreSSL
-compatibility warning from urllib3; no TLS verification has been disabled.
+The AI dashboard uses Python 3.12 in `.venv-agent`. The older `.venv` remains
+available for the original Python 3.9 lessons.
+
+### Ask a question in the dashboard
+
+1. Select a saved dataset, product, analysis month, and optional baseline in the sidebar.
+2. Expand **Gemini connection** in the sidebar and enter your key in the
+   password field. It stays in the Streamlit session; it is not written to a file
+   or copied into reports. An existing server environment key also works.
+3. For a new dataset, open **Data & trends → Search index maintenance** and click
+   **Prepare review search** once.
+4. Enter your question and click **Investigate reviews**. This sends the question
+   and requested evidence to Gemini. Regular widget reruns do not call Gemini.
+5. Read the draft, expand the original reviews and database results, and inspect
+   **Technical details: tools and usage** when needed. Download the report if needed.
+
+Changing the selected scope clears the previous report from the view. Each
+submission starts a fresh investigation; reports are not persisted across server
+restarts. The final narrative now uses a Pydantic schema through Gemini native JSON
+output. Review IDs, periods and exact quotes are checked; failed reports are
+withheld. SQL statistics are attached by Python. Semantic claim support and
+arbitrary numerical claims in narrative remain unverified, and reports are not
+part of the persistent approval workflow. Previous rule-based decisions remain readable under
+**Data & trends**; they are separate from AI reports. Review dependencies, runtime,
+authentication and operations before production deployment.
 
 ## Real data
 
@@ -47,8 +69,9 @@ The importer streams the first 50,000 All Beauty records and retains the eight
 most frequent parent product IDs in that prefix, regardless of rating. The current
 sample contains 932 unique reviews. This is a non-random, incomplete historical
 sample, not a representative measure of customer sentiment or brand performance.
-The busiest product-month has only 11 reviews; default 20-review alert guards
-therefore withhold alerts. Product IDs are preserved; product names are not invented.
+The busiest product-month has only 11 reviews; the default 20-review comparison
+rule therefore flags insufficient samples. Product IDs are preserved; product names
+are not invented. This rule is not a statistical significance test.
 
 `data/amazon_beauty_provenance.json` records the upstream revision, URL, timestamp,
 sampling method, CSV hash, and dataset ID. User IDs are not stored. Downloaded
@@ -57,27 +80,34 @@ Consult the upstream source terms before redistributing source data.
 
 ## Use the application
 
-1. Select the saved public dataset, or upload a CSV and click **Validate and save dataset**.
-2. Select a product, analysis month, and an earlier baseline month.
-3. Inspect metrics. They query the persistent SQLite review table.
-4. In **Review evidence**, choose **Semantic** and build the index if requested.
-5. Enter a question. Results include original review IDs/text, matched passages,
-   and similarity scores, filtered by dataset, product, and month.
-6. In **Decisions**, inspect the rule-generated proposal and evidence; record approval/rejection.
+The three tabs have distinct purposes:
+
+- **Ask reviews:** enter a question; read the draft and supporting original reviews.
+- **Data & trends:** inspect SQL trends and paginated reviews; prepare the search
+  index or optionally import a new dataset.
+- **Project & quality:** understand the components, measured tests, limitations
+  and remaining work.
+
+The default review store is `data/reviews.sqlite`, a persistent database file.
+CSV is only an ingestion format; normal dashboard use does not read the original
+CSV or require another upload. Set `DRISHTIQ_DB_PATH` to use another compatible
+SQLite file. This setting does not implement a PostgreSQL/MySQL connection.
+See the [implementation plan](docs/learning/project-next-steps.md) for server-database
+integration and the [plain-language project review](docs/project-review.md).
 
 For the public sample, product `B0107QYW14`, month `2016-04` has the most reviews
-in a single product-month (11), useful for exploring search. The results are not
-an evaluated claim about retrieval accuracy.
+in a single product-month (11), useful for exploring search.
 
 ## Architecture and file map
 
 ```text
-CSV → validation → immutable SQLite dataset snapshot
-                       ├─ fixed SQL → rating metrics
-                       └─ token passages → MiniLM → persistent Chroma collection
-Question + product/month → query embedding → filtered Chroma search
-                         → review IDs → source rows in SQLite → dashboard evidence
-Keyword topic rules → proposal → Pydantic + citation check → human → SQLite audit
+Import → validation → immutable SQLite dataset snapshot
+                         └─ review passages → MiniLM → persistent Chroma index
+Question + selected product/month → Gemini requests a tool
+  LangGraph executes scoped LangChain tools:
+    metrics → fixed, parameterized SQL → exact rating statistics
+    search  → MiniLM query vector → filtered Chroma → original SQLite reviews
+  Tool results → Gemini → draft explanation + cited reviews → Streamlit
 ```
 
 - `src/database.py`: dataset identity, transactional imports, persistent reviews,
@@ -88,7 +118,15 @@ Keyword topic rules → proposal → Pydantic + citation check → human → SQL
   Its old in-memory metrics helper remains for Lesson 1-era tests; the dashboard
   now uses `ReviewStore.metrics` against persistent storage.
 - `src/schemas.py` and `src/recommendations.py`: structure and citation-membership checks.
-- `app.py`: import forms, saved dataset selection, metrics, search, human decisions.
+- `app.py`: three-tab dashboard, selection, SQL trends, paginated reviews and imports.
+- `src/dashboard_ai.py`: connection settings, question form and investigation display.
+- `src/investigation.py`: runs the graph and collects draft, evidence and usage.
+- `src/reporting.py`: typed final narrative, native structured generation and
+  fail-closed source checks. One extra model call after evidence collection;
+  no automatic report-repair loop. Original SQL results provide displayed statistics.
+- `src/agent.py`, `src/tools.py`, `src/llm.py`: bounded graph, scoped tools and Gemini.
+- `src/dashboard_project.py`, `src/project_status.py`: measured quality display and
+  source-linked verification status.
 - `scripts/import_public_reviews.py`: bounded public-data importer and provenance.
 - `lessons/06_persistent_sql.py`: walkthrough of real SQL calculations.
 
@@ -111,12 +149,13 @@ configuration is included in collection identity. Interrupted index builds are n
 marked ready and may be rerun. Search returns unique reviews and reloads their full
 source text from SQLite. Similarity scores are not calibrated confidence values.
 
-Complaint charts still use keywords within low-rating reviews. These tags can miss
-negation/context and are not validated sentiment labels. Spike alerts use sample-size
-and percentage-point thresholds, not a significance test. Neither retrieves nor
-proves root causes. Search does not yet abstain based on an evaluated relevance threshold.
+The main dashboard shows low-rating share, not a count of specific complaints.
+Legacy keyword tags can miss negation/context and are not validated sentiment labels;
+they are no longer the main dashboard investigation. Reviews describe reported
+problems and may suggest possible causes; they cannot prove manufacturing or
+operational root causes. Search does not yet abstain based on an evaluated relevance threshold.
 
-Decisions store dataset identity, product/month/baseline, evidence, reviewer, and time.
+Legacy decisions store dataset identity, product/month/baseline, evidence, reviewer, and time.
 The first decision for an exact proposal is preserved. History is filtered by dataset.
 Reviewer names are self-entered; this is not authenticated identity. No external action
 is executed. Citation existence does not establish that a claim is supported.
@@ -124,9 +163,9 @@ is executed. Citation existence does not establish that a claim is supported.
 ## Validation
 
 ```bash
-.venv/bin/python -m unittest discover -s tests -v
-.venv/bin/python -m scripts.check_semantic
-.venv/bin/python -m lessons.06_persistent_sql
+.venv-agent/bin/python -m scripts.verify_project
+.venv-agent/bin/python -m scripts.check_semantic
+.venv-agent/bin/python -m scripts.evaluate_retrieval --k 3 --output reports/retrieval_current.json
 ```
 
 Unit checks cover calculations, invalid data, duplicate/conflicting IDs, persistence,
@@ -135,37 +174,43 @@ The semantic integration check uses the real local model with isolated temporary
 stores: long-review chunking, repeated indexing, product/month/dataset isolation,
 source lookup, and review deduplication. These are functional checks, not a retrieval
 benchmark. Dashboard startup and semantic search have also been exercised through
-Streamlit AppTest.
+Streamlit AppTest. The latest saved test run is in
+`reports/project_verification.json`; the dashboard checks its source fingerprint
+before displaying it as current. The 2026-10-21 run passed 56 tests without skips.
+Model calls in automated tests are scripted; no live Gemini accuracy is implied.
+See the [code/dashboard audit and repository comparison](docs/audit-2026-10-21.md)
+for live-check limitations and implementation priorities.
 
 ## Next milestones
 
-1. Human-labelled retrieval evaluation: relevant/non-relevant examples, out-of-scope
-   questions, retrieval recall/precision, failure review, response latency.
-2. Grounded Gemini answers with metrics, review citations, abstention, and output checks.
-3. LangGraph routing and persisted interrupt/resume approval.
-4. Deployment hardening: supported runtime, dependency review, authentication,
+1. Evaluate structured-report claim support, narrative numerical accuracy and live reliability.
+2. Human-reviewed, held-out retrieval evaluation and evidence-sufficiency/abstention.
+3. Persistent investigations and LangGraph interrupt/resume approval.
+4. Read-only PostgreSQL/MySQL integration and incremental ingestion/index refresh.
+5. Deployment hardening: supported runtime, dependency review, authentication,
    data access boundaries, backups, monitoring, retention, and deployment tests.
 
 ## Honest resume wording today
 
-**DristiQ | Python, SQL, SQLite, Streamlit, Sentence Transformers, Chroma, Pydantic**
+**DrishtiQ | Python, SQL, SQLite, Streamlit, Gemini, LangChain, LangGraph, MiniLM, Chroma**
 
 - Built a review analytics application with reproducible public-data ingestion,
   persistent SQL metrics, and dataset-scoped semantic retrieval using local embeddings.
-- Added passage indexing, product/date filters, source-linked evidence, and validated
-  recommendations with persistent human decision history.
+- Added passage indexing, product/date filters, source-linked evidence, and a bounded
+  agent that requests scoped tools before drafting review analyses.
 
 Do not claim production readiness, measured model accuracy, or business impact.
 The user's live metrics smoke check does not establish general answer quality.
-LangGraph integration currently exists in the learning CLI, with offline
-routing tests, not in the dashboard approval flow.
+LangGraph integration exists in the CLI and dashboard question flow, with
+offline routing and Streamlit interaction tests. Persistent approval for AI
+reports is still pending.
 
 ## Retrieval evaluation — first measured baseline
 
 ```bash
-.venv/bin/python -m scripts.evaluate_retrieval --k 3
-.venv/bin/python -m lessons.07_retrieval_evaluation
-.venv/bin/python -m lessons.07_retrieval_evaluation --case Q21
+.venv-agent/bin/python -m scripts.evaluate_retrieval --k 3 --output reports/retrieval_current.json
+.venv-agent/bin/python -m lessons.07_retrieval_evaluation
+.venv-agent/bin/python -m lessons.07_retrieval_evaluation --case Q21
 ```
 
 `tests/retrieval_cases.json` contains 24 development questions: 20 with evidence
@@ -193,7 +238,7 @@ not a verified skincare-only label. Cases deliberately include those records
 rather than silently relabelling them.
 
 Next: independently review labels, add separate held-out cases, and evaluate
-an evidence-sufficiency/abstention mechanism before adding generated answers.
+an evidence-sufficiency/abstention mechanism before treating generated answers as reliable.
 Do not tune a cutoff on the four negative questions and claim validated quality.
 The report records case hash, dataset identity, model name, index configuration,
 library versions, and per-query warm latency. It is not a load benchmark.

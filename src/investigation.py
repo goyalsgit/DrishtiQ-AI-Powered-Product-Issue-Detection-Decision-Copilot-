@@ -27,7 +27,7 @@ def run_investigation(model, store, dataset_id, product, month, question, *,
         raise ValueError("Enter a question between 1 and 4000 characters.")
     tools = make_tools(store, dataset_id, product, month, search=search,
                        baseline_month=baseline_month, minimum_reviews=minimum_reviews)
-    graph = build_agent(model, tools)
+    graph = build_agent(model, tools, collect_only=True)
     result = {
         "question": question.strip(),
         "scope": {"dataset_id": dataset_id, "product": product, "month": month,
@@ -56,13 +56,24 @@ def run_investigation(model, store, dataset_id, product, month, question, *,
                         result["tool_errors"].append(message.name)
                     else:
                         scope = data.get("scope", {})
+                        missing = [r["review_id"] for r in data.get("reviews", [])
+                                   if not (r.get("month") or scope.get("month"))]
+                        if missing:
+                            # Every citation needs a real month. Take it from SQLite,
+                            # the source of truth, if a search result lacks one.
+                            months = store.read_ids(dataset_id, missing).set_index(
+                                "review_id")["month"].to_dict()
+                            for r in data["reviews"]:
+                                r.setdefault("month", None)
+                                r["month"] = r["month"] or months.get(r["review_id"])
                         for review in data.get("reviews", []):
                             key = (scope.get("dataset_id"), scope.get("product"),
                                    scope.get("month"), review["review_id"])
                             if key not in evidence_keys:
                                 evidence_keys.add(key)
                                 result["evidence"].append({
-                                    **review, "month": scope.get("month"),
+                                    # Each review keeps its own month (needed for "All months").
+                                    **review, "month": review.get("month") or scope.get("month"),
                                     "period": data.get("period", "current"),
                                 })
                 elif getattr(message, "tool_calls", None):
@@ -77,6 +88,12 @@ def run_investigation(model, store, dataset_id, product, month, question, *,
                 result["trace"].append(event)
                 if on_event:
                     on_event(event)
-    if result["answer"] and not limited:
+    # At the call limit, still write a report if evidence was already collected;
+    # the report states that collection stopped early.
+    if result["answer"] and (not limited or result["evidence"]):
         result["status"] = "draft_with_tool_errors" if result["tool_errors"] else "draft"
+        if limited:
+            result["tool_errors"].append("call_limit_reached_some_searches_not_run")
+        from src.reporting import finalize_report
+        finalize_report(model, result, on_event)
     return result

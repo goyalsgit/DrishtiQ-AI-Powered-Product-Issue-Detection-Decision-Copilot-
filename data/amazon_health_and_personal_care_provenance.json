@@ -1,0 +1,16 @@
+{
+  "source": "https://huggingface.co/datasets/McAuley-Lab/Amazon-Reviews-2023",
+  "project_page": "https://amazon-reviews-2023.github.io/",
+  "revision": "2b6d039ed471f2ba5fd2acb718bf33b0a7e5598e",
+  "download_url": "https://huggingface.co/datasets/McAuley-Lab/Amazon-Reviews-2023/resolve/2b6d039ed471f2ba5fd2acb718bf33b0a7e5598e/raw/review_categories/Health_and_Personal_Care.jsonl",
+  "retrieved_utc": "2026-10-28T20:15:49.231727+00:00",
+  "sampling": "First 50,000 source records; keep eight most frequent parent_asin products. Not a random or representative sample.",
+  "source_rows_scanned": 50000,
+  "retained_rows": 2275,
+  "excluded_on_import": 0,
+  "dataset_id": "bd07fe55faf4e97d6ee416648d6894bb9c62cb8d813dcc1d571b528440b4b9d6",
+  "csv_sha256": "e3480c20e48dfe6aa4b091ea0a3c101962cf5f73551d8871203ce5dac9d39c69",
+  "product_identity": "Original parent_asin; product names are not inferred.",
+  "dates": "Original timestamps converted from Unix milliseconds to UTC dates.",
+  "limits": "Incomplete historical sample. Metrics describe this saved sample only, not all Amazon customers or a brand. No human-verified topic labels."
+}

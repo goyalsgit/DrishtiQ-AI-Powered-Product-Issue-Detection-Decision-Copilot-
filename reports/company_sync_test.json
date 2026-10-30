@@ -1,0 +1,32 @@
+{
+  "company_rows_created": 1500,
+  "first_sync": {
+    "fetched": 1500,
+    "added": 1500,
+    "skipped_invalid": 0,
+    "passages_indexed": 1506,
+    "seconds": 6.2
+  },
+  "before": {
+    "reviews": 1500,
+    "low_ratings": 47,
+    "new_review_found_by_search": null
+  },
+  "posted_company_row": 1501,
+  "in_drishtiq_before_sync": false,
+  "second_sync": {
+    "fetched": 1,
+    "added": 1,
+    "skipped_invalid": 0,
+    "passages_indexed": 1,
+    "seconds": 0.016
+  },
+  "after": {
+    "reviews": 1501,
+    "low_ratings": 48,
+    "search_rank_of_new_review": 1,
+    "problem_reviews_grouped": 142,
+    "new_review_is_a_theme_example": false
+  },
+  "passed": true
+}

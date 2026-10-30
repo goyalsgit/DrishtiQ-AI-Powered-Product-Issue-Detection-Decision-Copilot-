@@ -1,0 +1,29 @@
+{
+  "first_sync": {
+    "fetched": 932,
+    "added": 932,
+    "skipped_invalid": 0,
+    "passages_indexed": 951,
+    "seconds": 4.37
+  },
+  "one_new_review": {
+    "fetched": 1,
+    "added": 1,
+    "skipped_invalid": 0,
+    "passages_indexed": 1,
+    "seconds": 0.015
+  },
+  "new_review_found_rank": 1,
+  "found_before_sync": false,
+  "sql_reviews_before_after": [
+    11,
+    12
+  ],
+  "sql_low_rating_before_after": [
+    3,
+    4
+  ],
+  "sync_with_nothing_new_seconds": 0.0,
+  "full_reindex_seconds": 4.14,
+  "speedup_incremental_vs_full": 272.6
+}

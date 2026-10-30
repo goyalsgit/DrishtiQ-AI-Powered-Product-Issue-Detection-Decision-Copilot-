@@ -1,0 +1,41 @@
+{
+  "schema_version": 2,
+  "dataset_id": "0c712a274ac86a968892ebc4c57a2b5725a00882c9a4dc8eed7ef9678b432ca7",
+  "scope": "whole product, all months",
+  "purpose": "Harder retrieval test: 98-173 reviews per product instead of 8-11 per product-month.",
+  "split_rule": "Questions alternate dev/test inside each product. Tune only on dev. Run test once at the end.",
+  "questions": [
+    {"case_id": "W01", "split": "dev",  "product": "B085BB7B1M", "question": "Which reviews say the cloth is too rough or scratchy for skin?"},
+    {"case_id": "W02", "split": "test", "product": "B085BB7B1M", "question": "Which reviews say the cloth tears, frays or falls apart?"},
+    {"case_id": "W03", "split": "dev",  "product": "B085BB7B1M", "question": "Which reviews say it dries quickly or does not get smelly or moldy?"},
+    {"case_id": "W04", "split": "test", "product": "B085BB7B1M", "question": "Which reviews say the cloth is too small or the wrong size?"},
+    {"case_id": "W05", "split": "dev",  "product": "B085BB7B1M", "question": "Which reviews say it lathers soap well?"},
+    {"case_id": "W06", "split": "test", "product": "B085BB7B1M", "question": "Which reviews call it a waste of money or poor value?"},
+    {"case_id": "W07", "split": "dev",  "product": "B085BB7B1M", "question": "Which reviews report redness, scratches or irritation after use?"},
+    {"case_id": "W08", "split": "test", "product": "B085BB7B1M", "question": "Which reviews say the package arrived damaged or with items missing?"},
+    {"case_id": "W09", "split": "dev",  "product": "B085BB7B1M", "question": "Which reviews say it leaves skin smooth or removes dead skin well?"},
+    {"case_id": "W10", "split": "test", "product": "B085BB7B1M", "question": "Which reviews report a battery or charging problem?"},
+
+    {"case_id": "B01", "split": "dev",  "product": "B0BM4GX6TT", "question": "Which reviews say the brow color fades too quickly?"},
+    {"case_id": "B02", "split": "test", "product": "B0BM4GX6TT", "question": "Which reviews report swelling, redness, burning or an allergic reaction?"},
+    {"case_id": "B03", "split": "dev",  "product": "B0BM4GX6TT", "question": "Which reviews say the shade was wrong or different from what they expected?"},
+    {"case_id": "B04", "split": "test", "product": "B0BM4GX6TT", "question": "Which reviews say the tint stains the skin around the brows?"},
+    {"case_id": "B05", "split": "dev",  "product": "B0BM4GX6TT", "question": "Which reviews say the box arrived crushed, opened or missing contents?"},
+    {"case_id": "B06", "split": "test", "product": "B0BM4GX6TT", "question": "Which reviews say it is easy to apply?"},
+    {"case_id": "B07", "split": "dev",  "product": "B0BM4GX6TT", "question": "Which reviews say the product did not work or gave no color at all?"},
+    {"case_id": "B08", "split": "test", "product": "B0BM4GX6TT", "question": "Which reviews say the instructions are confusing or application is messy?"},
+    {"case_id": "B09", "split": "dev",  "product": "B0BM4GX6TT", "question": "Which reviews say the product was dried out or expired?"},
+    {"case_id": "B10", "split": "test", "product": "B0BM4GX6TT", "question": "Which reviews report the wooden brush handle cracking?"},
+
+    {"case_id": "H01", "split": "dev",  "product": "B00R1TAN7I", "question": "Which reviews say the bristles are not real boar bristle or not as described?"},
+    {"case_id": "H02", "split": "test", "product": "B00R1TAN7I", "question": "Which reviews say the brush has a bad smell?"},
+    {"case_id": "H03", "split": "dev",  "product": "B00R1TAN7I", "question": "Which reviews say it does not get through thick hair or detangle?"},
+    {"case_id": "H04", "split": "test", "product": "B00R1TAN7I", "question": "Which reviews say the bristles are too sharp or hurt the scalp?"},
+    {"case_id": "H05", "split": "dev",  "product": "B00R1TAN7I", "question": "Which reviews say bristles fell out or the brush broke?"},
+    {"case_id": "H06", "split": "test", "product": "B00R1TAN7I", "question": "Which reviews say it makes hair shiny or smooth?"},
+    {"case_id": "H07", "split": "dev",  "product": "B00R1TAN7I", "question": "Which reviews say it works well for thin or fine hair?"},
+    {"case_id": "H08", "split": "test", "product": "B00R1TAN7I", "question": "Which reviews praise how the brush looks or the wooden handle?"},
+    {"case_id": "H09", "split": "dev",  "product": "B00R1TAN7I", "question": "Which reviews mention static or frizz?"},
+    {"case_id": "H10", "split": "test", "product": "B00R1TAN7I", "question": "Which reviews say the eyebrow tint color faded?"}
+  ]
+}

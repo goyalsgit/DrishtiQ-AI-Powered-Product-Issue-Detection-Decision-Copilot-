@@ -1,0 +1,123 @@
+[
+  {
+    "question": "What problems are customers reporting?",
+    "status": "checked_draft",
+    "seconds": 18.4,
+    "tokens": 7728,
+    "evidence": 14,
+    "error_code": null,
+    "findings": [
+      [
+        "reported_problem",
+        "Customers reported receiving broken or cracked items upon arrival.",
+        "Arrived broken. Screen was cracked"
+      ],
+      [
+        "reported_problem",
+        "Hardware failures included devices dying or failing to turn on after a few months of use.",
+        "It worked for about 6 months and then wouldn't turn on."
+      ],
+      [
+        "reported_problem",
+        "Charging port malfunctions prevented devices from being charged.",
+        "Great tablet but charging port stopped working. Tablet was working perfectly. Now the charging port isn't working. Can't"
+      ],
+      [
+        "reported_problem",
+        "Display faults involved lines appearing across the screen during startup and use.",
+        "The one purchased at Best Buy had black and gray lines appearing across the screen when powering up. It got worse, to oc"
+      ],
+      [
+        "reported_problem",
+        "Software ecosystem limitations were noted regarding app store availability.",
+        "only downside is the need to use the Amazon App Store instead of the normal Google Play Store."
+      ]
+    ],
+    "actions": [
+      "[high] Quality: Investigate hardware quality control for charging ports and power components to prevent premature failure.",
+      "[normal] Logistics: Review packaging and transit protection to reduce instances of items arriving broken or cracked."
+    ],
+    "answer": ""
+  },
+  {
+    "question": "What are customers demanding or wishing for?",
+    "status": "checked_draft",
+    "seconds": 7.0,
+    "tokens": 7381,
+    "evidence": 14,
+    "error_code": null,
+    "findings": [
+      [
+        "customer_request",
+        "A customer expressed a wish for child profile settings to remain active until an adult explicitly removes them.",
+        "I just wish you could set them to stay in the child's profile until an adult takes it out."
+      ]
+    ],
+    "actions": [
+      "[normal] Content & support: Evaluate adding a setting to keep the child profile locked until manually unlocked by an adult."
+    ],
+    "answer": ""
+  },
+  {
+    "question": "What do customers like most?",
+    "status": "checked_draft",
+    "seconds": 11.8,
+    "tokens": 9195,
+    "evidence": 12,
+    "error_code": null,
+    "findings": [
+      [
+        "positive_feedback",
+        "Customers love the device for children and report that kids enjoy using it.",
+        "Perfect for my 10 years old daughter. She loves it and that makes me happy."
+      ],
+      [
+        "positive_feedback",
+        "Customers frequently praise the product for its affordability, value, and pricing.",
+        "I Like the size, the quality and most especially, the price."
+      ],
+      [
+        "positive_feedback",
+        "Customers highlight positive performance features including fast processing speed, clear display, and responsiveness.",
+        "Screen quality appears to be very good and processing speed is very quick!"
+      ]
+    ],
+    "actions": [],
+    "answer": ""
+  },
+  {
+    "question": "Is the battery life good?",
+    "status": "checked_draft",
+    "seconds": 10.5,
+    "tokens": 5176,
+    "evidence": 6,
+    "error_code": null,
+    "findings": [
+      [
+        "reported_problem",
+        "Customers report poor battery life that does not last long during continuous use or nightly reading.",
+        "Good tablet buy terrible battery life."
+      ],
+      [
+        "positive_feedback",
+        "Some customers find the battery life very good and capable of staying charged all day through play.",
+        "Life battery very good"
+      ]
+    ],
+    "actions": [
+      "[high] Quality: Clarify expected battery life spans under different types of continuous use in product descriptions."
+    ],
+    "answer": ""
+  },
+  {
+    "question": "Why do people give it 1 or 2 stars, and how can we fix it?",
+    "status": "incomplete",
+    "seconds": 5.7,
+    "tokens": 7337,
+    "evidence": 12,
+    "error_code": null,
+    "findings": [],
+    "actions": [],
+    "answer": "Investigation stopped at the configured call limit. No complete report was produced; inspect the trace."
+  }
+]

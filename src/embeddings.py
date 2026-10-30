@@ -18,6 +18,12 @@ def load_model():
                                device='cpu', local_files_only=True)
 
 
+def scope_filter(product, month):
+    """Chroma filter. None means 'all' for product and/or month."""
+    parts = [{k: v} for k, v in (('product', product), ('month', month)) if v is not None]
+    return None if not parts else parts[0] if len(parts) == 1 else {'$and': parts}
+
+
 class ReviewSearch:
     def __init__(self, model, path=None):
         import chromadb
@@ -54,6 +60,29 @@ class ReviewSearch:
         if df.empty:
             raise ValueError('Cannot index an empty or unknown dataset.')
         collection = self.collection(dataset_id)
+        total = self._index_rows(collection, df)
+        self._mark_ready(collection, total)
+        return total
+
+    def add_reviews(self, store, dataset_id, review_ids):
+        """Index only new reviews of a live dataset (incremental update).
+
+        Chunk IDs come from review_id, so re-adding a review overwrites the
+        same vectors instead of duplicating them. Returns passages added."""
+        if not self.ready(dataset_id):
+            self.build(store, dataset_id)  # first time: index everything
+            return self.collection(dataset_id).count()
+        if not review_ids:
+            return 0
+        df = store.read_ids(dataset_id, review_ids)
+        collection = self.collection(dataset_id)
+        before = collection.count()
+        self._index_rows(collection, df)
+        # Count after upserting, so retries never inflate the expected total.
+        self._mark_ready(collection, collection.count())
+        return collection.count() - before
+
+    def _index_rows(self, collection, df):
         batch = []
         total = 0
 
@@ -73,10 +102,12 @@ class ReviewSearch:
                     batch = []
         if batch:
             flush()
+        return total
+
+    def _mark_ready(self, collection, expected):
         # Chroma rejects hnsw:space in modify(), even if its value is unchanged.
         metadata = {k: v for k, v in collection.metadata.items() if k != 'hnsw:space'}
-        collection.modify(metadata={**metadata, 'ready': True, 'expected_chunks': total})
-        return total
+        collection.modify(metadata={**metadata, 'ready': True, 'expected_chunks': expected})
 
     def search(self, store, dataset_id, product, month, question, limit=6):
         if not question.strip():
@@ -91,9 +122,10 @@ class ReviewSearch:
         vector = self.model.encode([question], normalize_embeddings=True).tolist()
         count = min(collection.count(), max(limit * 4, 24))
         # Increase candidate count when many passages belong to the same review.
+        where = scope_filter(product, month)
         while True:
             result = collection.query(query_embeddings=vector, n_results=count,
-                where={'$and': [{'product': product}, {'month': month}]},
+                **({'where': where} if where else {}),
                 include=['documents', 'metadatas', 'distances'])
             hits = []
             seen = set()
@@ -103,7 +135,9 @@ class ReviewSearch:
                     continue
                 seen.add(review_id)
                 row = originals.loc[review_id]
-                hits.append({'review_id': review_id, 'rating': int(row.rating),
+                hits.append({'review_id': review_id, 'product': row['product'],
+                             'month': row.month,
+                             'rating': int(row.rating),
                              'text': row.text, 'matched_passage': passage,
                              'similarity': round(1 - float(distance), 4)})
                 if len(hits) == limit:

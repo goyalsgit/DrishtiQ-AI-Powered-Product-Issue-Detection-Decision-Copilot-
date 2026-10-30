@@ -112,9 +112,10 @@ Low ratings are not complaint labels. Top search hits cannot measure complaint
 prevalence or establish causes. An irrelevant nearest match should lead to
 insufficient evidence, not a confident explanation.
 
-There is no dashboard integration, persistent conversation checkpoint, human
-approval node, or decision write in this lesson. Those are later steps.
-Each invocation starts a new conversation.
+The same agent now powers the dashboard's **AI Investigation** tab. The CLI
+and dashboard both start a new conversation for each submission. Persistent
+conversation checkpoints, an AI approval node, and AI-report decision writes
+remain future steps.
 
 ```bash
 .venv-agent/bin/python -m unittest discover -s tests -p 'test_agent.py' -v

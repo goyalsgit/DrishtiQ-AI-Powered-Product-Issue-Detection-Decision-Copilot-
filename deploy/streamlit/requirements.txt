@@ -1,0 +1,17 @@
+# Community Cloud reads dependencies beside the selected entrypoint first.
+# CPU-only PyTorch avoids downloading NVIDIA runtime packages on the free host.
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.6.0+cpu; sys_platform == 'linux'
+-r ../../requirements-dashboard.txt
+
+# Match the application's currently tested core versions.
+streamlit==1.50.0
+langchain==1.4.6
+langgraph==1.2.16
+langchain-google-genai==4.4.2
+pandas==2.3.3
+pydantic==2.14.1
+numpy==2.5.4
+huggingface-hub==0.36.2
+requests==2.34.2
+scikit-learn==1.9.1   # k-means themes (src/themes.py)
