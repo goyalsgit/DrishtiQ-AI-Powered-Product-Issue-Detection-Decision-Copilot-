@@ -15,3 +15,4 @@ numpy==2.5.4
 huggingface-hub==0.36.2
 requests==2.34.2
 scikit-learn==1.9.1   # k-means themes (src/themes.py)
+psycopg[binary]==3.3.6   # company Postgres sync (src/sync.py)

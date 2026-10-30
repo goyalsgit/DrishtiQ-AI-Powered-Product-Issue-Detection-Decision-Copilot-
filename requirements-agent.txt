@@ -4,3 +4,4 @@ langgraph>=1,<2
 pandas>=2,<2.4
 langchain-google-genai>=4,<5
 scikit-learn>=1.5,<2
+psycopg[binary]>=3.2,<4

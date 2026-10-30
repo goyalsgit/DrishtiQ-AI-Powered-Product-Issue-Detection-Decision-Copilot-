@@ -29,7 +29,13 @@ def read_upload(upload):
 datasets = store.datasets()
 if datasets.empty:
     st.title('DrishtiQ')
-    st.info('The review database is empty. Import a CSV to start. No demo data is added automatically.')
+    st.info('The review database is empty. Load the public sample or import your own CSV. '
+            'No demo data is added automatically.')
+    if st.button('Load public sample: 932 real Amazon Beauty reviews', type='primary'):
+        from src.cloud_bootstrap import ensure_public_sample
+        with st.spinner('Downloading and saving the public sample…'):
+            ensure_public_sample(store)
+        st.rerun()
     with st.form('initial_import'):
         upload = st.file_uploader('Import reviews (CSV)', type='csv', help=CSV_HELP)
         if st.form_submit_button('Save to database') and upload is not None:
@@ -117,33 +123,41 @@ def kpi_row(stats):
 
 
 def render_company_sync(search):
+    """Sync from the company database: Neon Postgres if COMPANY_DB_URL is set, else a local file."""
     from src import company_db
     with st.container(border=True):
         st.markdown('**Company database sync**')
-        st.caption(f'Source: {company_db.COMPANY_DB.name} (table customer_reviews). Only new rows '
+        st.caption(f'Source: {company_db.description()} (table customer_reviews). Only new rows '
                    'are copied into "Company reviews (live)" and only those are indexed.')
-        if not company_db.COMPANY_DB.exists():
-            if st.button('Create demo company database (1,500 real reviews)'):
+        try:
+            ready = company_db.exists()
+        except Exception as exc:
+            st.error(f'Cannot reach the company database ({type(exc).__name__}). Check COMPANY_DB_URL.')
+            return
+        if not ready:
+            if PUBLIC_DEMO:
+                st.info('No customer_reviews table yet. Run scripts.load_company_db on your laptop.')
+            elif st.button('Create demo company database (1,500 real reviews)'):
                 with st.spinner('Creating…'):
                     st.success(f'{company_db.create():,} reviews written. Now click Sync now.')
-        else:
-            if st.button('🔄 Sync now', type='primary'):
-                with st.spinner('Copying new rows and indexing them…'):
-                    live_id, result = company_db.sync(store, search)
-                st.success(f"Fetched {result['fetched']:,} new rows, added {result['added']:,} reviews, "
-                           f"indexed {result['passages_indexed']:,} passages.")
-            with st.form('add_company_review'):
-                st.markdown('Simulate a customer posting a review in the company system:')
-                sku = st.selectbox('Company product', company_db.products())
-                stars = st.slider('Stars', 1, 5, 2)
-                body = st.text_area('Review text')
-                if st.form_submit_button('Post review to company database'):
-                    if body.strip():
-                        row = company_db.add_review(sku, stars, body.strip())
-                        st.success(f'Posted as row {row}. It is NOT in DrishtiQ until you click Sync now.')
-                    else:
-                        st.warning('Write some review text first.')
-
+            return
+        if st.button('🔄 Sync now', type='primary'):
+            with st.spinner('Copying new rows and indexing them…'):
+                _, result = company_db.sync(store, search)
+            st.success(f"Fetched {result['fetched']:,} new rows, added {result['added']:,} reviews, "
+                       f"indexed {result['passages_indexed']:,} passages. Choose "
+                       f"\"{company_db.LIVE_NAME}\" in the sidebar (refresh if it is new).")
+        with st.form('add_company_review'):
+            st.markdown('Simulate a customer posting a review in the company system:')
+            sku = st.selectbox('Company product', company_db.products())
+            stars = st.slider('Stars', 1, 5, 2)
+            body = st.text_area('Review text', max_chars=1000)
+            if st.form_submit_button('Post review to company database'):
+                if body.strip():
+                    row = company_db.add_review(sku, stars, body.strip())
+                    st.success(f'Posted as row {row}. It is NOT in DrishtiQ until you click Sync now.')
+                else:
+                    st.warning('Write some review text first.')
 
 overview, ask, reviews_tab, data_tab, project = st.tabs(
     ['Overview', 'Ask reviews', 'Reviews', 'Data', 'Project & quality'])
@@ -280,8 +294,9 @@ with data_tab:
                     except (ValueError, pd.errors.ParserError, UnicodeDecodeError) as exc:
                         st.error(str(exc))
 
-    # The demo company database is built from 1429_1.csv, which is not on the public host.
-    if not PUBLIC_DEMO:
+    # On the public host, show sync only when a real Postgres (COMPANY_DB_URL) is configured.
+    from src.company_db import database_url
+    if not PUBLIC_DEMO or database_url():
         render_company_sync(search)
 
 

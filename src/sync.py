@@ -34,15 +34,16 @@ class SourceMapping:
     rating: str
     text: str
 
-    def query(self):
+    def query(self, mark='?'):
+        """mark is the driver's placeholder: '?' for SQLite, '%s' for Postgres."""
         names = [self.table, self.id_column, self.product, self.date, self.rating, self.text]
         # Identifiers cannot be SQL parameters, so only allow plain names.
         if not all(_IDENT.match(n) for n in names):
             raise ValueError('Table and column names must be plain identifiers.')
         return (f'SELECT {self.id_column} AS source_id, {self.product} AS product, '
                 f'{self.date} AS date, {self.rating} AS rating, {self.text} AS text '
-                f'FROM {self.table} WHERE {self.id_column} > ? '
-                f'ORDER BY {self.id_column} LIMIT ?')
+                f'FROM {self.table} WHERE {self.id_column} > {mark} '
+                f'ORDER BY {self.id_column} LIMIT {mark}')
 
 
 def _create_state(con):
@@ -61,29 +62,55 @@ def watermark(store, dataset_id, source):
 
 
 def sync_sqlite_source(source_path, mapping, store, search, dataset_id, *, batch_size=1000):
-    """Copy new rows from a SQLite source. For PostgreSQL/MySQL, the same steps
-    apply with that database's driver; only the connection line changes."""
-    source = f'sqlite:{source_path}:{mapping.table}'
-    totals = {'fetched': 0, 'added': 0, 'skipped_invalid': 0, 'passages_indexed': 0}
-    # mode=ro: DrishtiQ can never modify the company database.
+    """Copy new rows from a SQLite file (read-only: mode=ro)."""
     src = sqlite3.connect(f'file:{source_path}?mode=ro', uri=True)
+
+    def fetch(last, limit):
+        return pd.read_sql_query(mapping.query('?'), src, params=(last, limit))
     try:
-        while True:
-            last = watermark(store, dataset_id, source)
-            rows = pd.read_sql_query(mapping.query(), src, params=(last, batch_size))
-            if rows.empty:
-                break
-            # Prefix with the source name so IDs from different systems never collide.
-            rows['review_id'] = 'SRC-' + rows['source_id'].astype(str)
-            added, removed = store.append(dataset_id, rows)
-            totals['passages_indexed'] += search.add_reviews(store, dataset_id, added)
-            with store.connect() as con:
-                _create_state(con)
-                con.execute('INSERT OR REPLACE INTO sync_state VALUES(?,?,?,datetime("now"))',
-                            (dataset_id, source, int(rows['source_id'].max())))
-            totals['fetched'] += len(rows)
-            totals['added'] += len(added)
-            totals['skipped_invalid'] += removed
+        return _copy_new_rows(fetch, f'sqlite:{source_path}:{mapping.table}',
+                              store, search, dataset_id, batch_size)
     finally:
         src.close()
+
+
+def sync_postgres_source(url, mapping, store, search, dataset_id, *, batch_size=1000):
+    """Copy new rows from Postgres (e.g. Neon). The session is read-only, so
+    DrishtiQ can never change the company database."""
+    import psycopg
+    with psycopg.connect(url, connect_timeout=15) as src:
+        src.read_only = True
+
+        def fetch(last, limit):
+            with src.cursor() as cur:
+                cur.execute(mapping.query('%s'), (last, limit))
+                columns = [c.name for c in cur.description]
+                return pd.DataFrame(cur.fetchall(), columns=columns)
+        # Identify the source without storing the password in sync_state.
+        host = url.split('@')[-1].split('?')[0]
+        return _copy_new_rows(fetch, f'postgres:{host}:{mapping.table}',
+                              store, search, dataset_id, batch_size)
+
+
+def _copy_new_rows(fetch, source, store, search, dataset_id, batch_size):
+    """The shared loop: fetch rows after the watermark, save, index, move the watermark."""
+    totals = {'fetched': 0, 'added': 0, 'skipped_invalid': 0, 'passages_indexed': 0}
+    while True:
+        last = watermark(store, dataset_id, source)
+        rows = fetch(last, batch_size)
+        if rows.empty:
+            break
+        rows['date'] = rows['date'].astype(str)   # Postgres returns date objects
+        # Prefix with the source name so IDs from different systems never collide.
+        rows['review_id'] = 'SRC-' + rows['source_id'].astype(str)
+        added, removed = store.append(dataset_id, rows)
+        totals['passages_indexed'] += search.add_reviews(store, dataset_id, added)
+        # Move the watermark only after the rows are saved and indexed.
+        with store.connect() as con:
+            _create_state(con)
+            con.execute('INSERT OR REPLACE INTO sync_state VALUES(?,?,?,datetime("now"))',
+                        (dataset_id, source, int(rows['source_id'].max())))
+        totals['fetched'] += len(rows)
+        totals['added'] += len(added)
+        totals['skipped_invalid'] += removed
     return totals

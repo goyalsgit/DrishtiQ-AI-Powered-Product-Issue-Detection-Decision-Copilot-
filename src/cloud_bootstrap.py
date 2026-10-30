@@ -56,4 +56,10 @@ def prepare_cloud_demo():
                           ignore_patterns=['onnx/*', 'openvino/*'])
         search = get_search()
     passages = search.build(store, dataset_id)
-    return {'dataset_id': dataset_id, 'passages': passages}
+    # The cloud disk is wiped on restart. If a company Postgres is configured,
+    # sync it now: the watermark starts at 0 again, so every review comes back.
+    from src import company_db
+    synced = None
+    if company_db.database_url() and company_db.exists():
+        synced = company_db.sync(store, search)[1]
+    return {'dataset_id': dataset_id, 'passages': passages, 'company_sync': synced}
